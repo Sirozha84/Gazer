@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gazer", "Gazer\Gazer.csproj", "{D7004F06-4DD9-4C4F-99C5-AB048EEC3175}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gazer Admin", "Gazer\Gazer Admin.csproj", "{D7004F06-4DD9-4C4F-99C5-AB048EEC3175}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gazer Server", "Server\Gazer Server.csproj", "{FAC4F224-2804-4225-8982-F568CDA03B9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gazer Logger", "Logger\Gazer Logger.csproj", "{6CB1885D-315A-4F86-8F8C-0F15B7651046}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{D7004F06-4DD9-4C4F-99C5-AB048EEC3175}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7004F06-4DD9-4C4F-99C5-AB048EEC3175}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7004F06-4DD9-4C4F-99C5-AB048EEC3175}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAC4F224-2804-4225-8982-F568CDA03B9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAC4F224-2804-4225-8982-F568CDA03B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAC4F224-2804-4225-8982-F568CDA03B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAC4F224-2804-4225-8982-F568CDA03B9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CB1885D-315A-4F86-8F8C-0F15B7651046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CB1885D-315A-4F86-8F8C-0F15B7651046}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CB1885D-315A-4F86-8F8C-0F15B7651046}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CB1885D-315A-4F86-8F8C-0F15B7651046}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
