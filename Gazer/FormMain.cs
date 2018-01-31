@@ -44,19 +44,30 @@ namespace Gazer
 
         private void timerPing_Tick(object sender, EventArgs e)
         {
-            if (Net.Ping())
-            {
-                toolStripStatusLabelStatus.Text = "Статус: OK";
-            }
-            else
-            {
-                toolStripStatusLabelStatus.Text = "Статус: Ошибка соединения с сервером";
-            }
+            SetStatus(Net.Ping());
         }
 
         private void FormMain_Load(object sender, EventArgs e)
         {
             timerPing_Tick(null, null);
+        }
+
+        void SetStatus(bool OK)
+        {
+            toolStripStatusLabelStatus.Text = "Статус: " +
+                (OK ? "OK" : "Ошибка соединения с сервером");
+            пользователиToolStripMenuItem.Enabled = OK;
+            monthCalendar1.Enabled = OK;
+            buttonAll.Enabled = OK;
+            buttonNone.Enabled = OK;
+            checkedListBoxUsers.Enabled = OK;
+            listViewLog.Enabled = OK;
+        }
+
+        private void пользователиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormUsers form = new FormUsers();
+            form.ShowDialog();
         }
     }
 }

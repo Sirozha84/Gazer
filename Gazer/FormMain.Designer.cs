@@ -41,7 +41,7 @@
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.listViewLog = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -49,7 +49,7 @@
             this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.labelNotImage = new System.Windows.Forms.Label();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.checkedListBoxUsers = new System.Windows.Forms.CheckedListBox();
             this.buttonAll = new System.Windows.Forms.Button();
             this.buttonNone = new System.Windows.Forms.Button();
             this.timerPing = new System.Windows.Forms.Timer(this.components);
@@ -99,6 +99,7 @@
             this.пользователиToolStripMenuItem.Name = "пользователиToolStripMenuItem";
             this.пользователиToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.пользователиToolStripMenuItem.Text = "Пользователи";
+            this.пользователиToolStripMenuItem.Click += new System.EventHandler(this.пользователиToolStripMenuItem_Click);
             // 
             // параметрыToolStripMenuItem
             // 
@@ -152,22 +153,22 @@
             this.toolStripStatusLabelStatus.Size = new System.Drawing.Size(46, 17);
             this.toolStripStatusLabelStatus.Text = "Статус:";
             // 
-            // listView1
+            // listViewLog
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.listViewLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.listViewLog.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3,
             this.columnHeader4});
-            this.listView1.Location = new System.Drawing.Point(188, 27);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(584, 507);
-            this.listView1.TabIndex = 3;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listViewLog.Location = new System.Drawing.Point(188, 27);
+            this.listViewLog.Name = "listViewLog";
+            this.listViewLog.Size = new System.Drawing.Size(584, 507);
+            this.listViewLog.TabIndex = 3;
+            this.listViewLog.UseCompatibleStateImageBehavior = false;
+            this.listViewLog.View = System.Windows.Forms.View.Details;
             // 
             // columnHeader1
             // 
@@ -215,15 +216,15 @@
             this.labelNotImage.Text = "Изображение не доступно";
             this.labelNotImage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // checkedListBox1
+            // checkedListBoxUsers
             // 
-            this.checkedListBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.checkedListBoxUsers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(12, 231);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(163, 154);
-            this.checkedListBox1.TabIndex = 8;
+            this.checkedListBoxUsers.FormattingEnabled = true;
+            this.checkedListBoxUsers.Location = new System.Drawing.Point(12, 231);
+            this.checkedListBoxUsers.Name = "checkedListBoxUsers";
+            this.checkedListBoxUsers.Size = new System.Drawing.Size(163, 154);
+            this.checkedListBoxUsers.TabIndex = 8;
             // 
             // buttonAll
             // 
@@ -256,9 +257,9 @@
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.buttonNone);
             this.Controls.Add(this.buttonAll);
-            this.Controls.Add(this.checkedListBox1);
+            this.Controls.Add(this.checkedListBoxUsers);
             this.Controls.Add(this.monthCalendar1);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.listViewLog);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.labelNotImage);
@@ -290,7 +291,7 @@
         private System.Windows.Forms.ToolStripMenuItem параметрыToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelStatus;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView listViewLog;
         private System.Windows.Forms.MonthCalendar monthCalendar1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label labelNotImage;
@@ -298,7 +299,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.CheckedListBox checkedListBoxUsers;
         private System.Windows.Forms.Button buttonAll;
         private System.Windows.Forms.Button buttonNone;
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem1;

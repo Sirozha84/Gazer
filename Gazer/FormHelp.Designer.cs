@@ -31,8 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormHelp));
             this.tabControlHelp = new System.Windows.Forms.TabControl();
             this.tabPageHelp = new System.Windows.Forms.TabPage();
-            this.tabPageHystory = new System.Windows.Forms.TabPage();
             this.richTextBoxHelp = new System.Windows.Forms.RichTextBox();
+            this.tabPageHystory = new System.Windows.Forms.TabPage();
             this.richTextBoxHystory = new System.Windows.Forms.RichTextBox();
             this.tabControlHelp.SuspendLayout();
             this.tabPageHelp.SuspendLayout();
@@ -64,6 +64,16 @@
             this.tabPageHelp.Text = "Общие сведения";
             this.tabPageHelp.UseVisualStyleBackColor = true;
             // 
+            // richTextBoxHelp
+            // 
+            this.richTextBoxHelp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBoxHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.richTextBoxHelp.Location = new System.Drawing.Point(3, 3);
+            this.richTextBoxHelp.Name = "richTextBoxHelp";
+            this.richTextBoxHelp.Size = new System.Drawing.Size(610, 434);
+            this.richTextBoxHelp.TabIndex = 0;
+            this.richTextBoxHelp.Text = resources.GetString("richTextBoxHelp.Text");
+            // 
             // tabPageHystory
             // 
             this.tabPageHystory.Controls.Add(this.richTextBoxHystory);
@@ -74,16 +84,6 @@
             this.tabPageHystory.TabIndex = 1;
             this.tabPageHystory.Text = "История версий";
             this.tabPageHystory.UseVisualStyleBackColor = true;
-            // 
-            // richTextBoxHelp
-            // 
-            this.richTextBoxHelp.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBoxHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.richTextBoxHelp.Location = new System.Drawing.Point(3, 3);
-            this.richTextBoxHelp.Name = "richTextBoxHelp";
-            this.richTextBoxHelp.Size = new System.Drawing.Size(610, 434);
-            this.richTextBoxHelp.TabIndex = 0;
-            this.richTextBoxHelp.Text = resources.GetString("richTextBoxHelp.Text");
             // 
             // richTextBoxHystory
             // 
@@ -101,7 +101,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(648, 497);
             this.Controls.Add(this.tabControlHelp);
+            this.MaximizeBox = false;
             this.Name = "FormHelp";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Справка";
             this.tabControlHelp.ResumeLayout(false);
