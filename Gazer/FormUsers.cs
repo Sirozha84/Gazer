@@ -81,15 +81,9 @@ namespace Gazer
             }
         }
 
-        private void buttonEdit_Click(object sender, EventArgs e)
-        {
-            Edit();
-        }
-
-        private void listViewUsers_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ButtonsRefresh();
-        }
+        private void buttonEdit_Click(object sender, EventArgs e) { Edit(); }
+        private void listViewUsers_DoubleClick(object sender, EventArgs e) { Edit(); }
+        private void listViewUsers_SelectedIndexChanged(object sender, EventArgs e) { ButtonsRefresh(); }
 
         private void buttonDel_Click(object sender, EventArgs e)
         {
@@ -97,10 +91,6 @@ namespace Gazer
             DrawList();
         }
 
-        private void listViewUsers_DoubleClick(object sender, EventArgs e)
-        {
-            Edit();
-        }
 
         void Edit()
         {
@@ -139,10 +129,7 @@ namespace Gazer
                 }
             }
             catch { }
-
             Close();
         }
     }
-
-
 }

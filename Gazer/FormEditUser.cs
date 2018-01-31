@@ -15,13 +15,11 @@ namespace Gazer
         public string Name;
         public int Type;
         public string Key;
-        bool New;
 
         public FormEditUser(bool New, string name, int type, string key)
         {
             InitializeComponent();
-            this.New = New;
-            Text = New ? "Создание нового пользователя" : "Изменение пользователя";
+            Text = New ? "Создание нового" : "Изменение" + " пользователя";
             textBoxName.Text = name;
             comboBoxTypes.DataSource = Data.Types;
             comboBoxTypes.SelectedIndex = type;
@@ -68,11 +66,6 @@ namespace Gazer
         {
             Key = "";
             KeyButtonRefresh();
-        }
-
-        private void FormEditUser_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

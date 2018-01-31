@@ -53,6 +53,8 @@
             this.buttonAll = new System.Windows.Forms.Button();
             this.buttonNone = new System.Windows.Forms.Button();
             this.timerPing = new System.Windows.Forms.Timer(this.components);
+            this.контрольныеТочкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -89,6 +91,8 @@
             // 
             this.сервисToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.пользователиToolStripMenuItem,
+            this.контрольныеТочкиToolStripMenuItem,
+            this.toolStripMenuItem2,
             this.параметрыToolStripMenuItem});
             this.сервисToolStripMenuItem.Name = "сервисToolStripMenuItem";
             this.сервисToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
@@ -97,14 +101,14 @@
             // пользователиToolStripMenuItem
             // 
             this.пользователиToolStripMenuItem.Name = "пользователиToolStripMenuItem";
-            this.пользователиToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.пользователиToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.пользователиToolStripMenuItem.Text = "Пользователи";
             this.пользователиToolStripMenuItem.Click += new System.EventHandler(this.пользователиToolStripMenuItem_Click);
             // 
             // параметрыToolStripMenuItem
             // 
             this.параметрыToolStripMenuItem.Name = "параметрыToolStripMenuItem";
-            this.параметрыToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.параметрыToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.параметрыToolStripMenuItem.Text = "Параметры";
             this.параметрыToolStripMenuItem.Click += new System.EventHandler(this.параметрыToolStripMenuItem_Click);
             // 
@@ -121,19 +125,19 @@
             // справкаToolStripMenuItem1
             // 
             this.справкаToolStripMenuItem1.Name = "справкаToolStripMenuItem1";
-            this.справкаToolStripMenuItem1.Size = new System.Drawing.Size(149, 22);
+            this.справкаToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.справкаToolStripMenuItem1.Text = "Справка";
             this.справкаToolStripMenuItem1.Click += new System.EventHandler(this.справкаToolStripMenuItem1_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(146, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
             // 
             // оПрограммеToolStripMenuItem
             // 
             this.оПрограммеToolStripMenuItem.Name = "оПрограммеToolStripMenuItem";
-            this.оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.оПрограммеToolStripMenuItem.Text = "О программе";
             this.оПрограммеToolStripMenuItem.Click += new System.EventHandler(this.оПрограммеToolStripMenuItem_Click);
             // 
@@ -250,6 +254,18 @@
             this.timerPing.Interval = 3000;
             this.timerPing.Tick += new System.EventHandler(this.timerPing_Tick);
             // 
+            // контрольныеТочкиToolStripMenuItem
+            // 
+            this.контрольныеТочкиToolStripMenuItem.Name = "контрольныеТочкиToolStripMenuItem";
+            this.контрольныеТочкиToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.контрольныеТочкиToolStripMenuItem.Text = "Контрольные точки";
+            this.контрольныеТочкиToolStripMenuItem.Click += new System.EventHandler(this.контрольныеТочкиToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(181, 6);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -305,6 +321,8 @@
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.Timer timerPing;
+        private System.Windows.Forms.ToolStripMenuItem контрольныеТочкиToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
     }
 }
 

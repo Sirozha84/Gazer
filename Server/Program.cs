@@ -11,12 +11,16 @@ namespace Server
     {
         static string UsersFile = "Users.txt";
         static List<User> Users = new List<User>();
+        static string CPFile = "CheckPoints.txt";
+        static List<CheckPoint> CheckPoints = new List<CheckPoint>();
 
         static void Main(string[] args)
         {
             Console.WriteLine("Gazer Sever     Версия 1.0 (26.01.2018)\n");
-            //Загрузка списка пользователей из файла
+            
+            //Загрузка списка данных из файлов
             LoadUsers();
+            LoadCP();
 
             //Запуск сервера
             TcpListener server = new TcpListener(IPAddress.Any, 8081);
@@ -36,13 +40,16 @@ namespace Server
             {
                 BinaryReader reader = new BinaryReader(stream);
                 BinaryWriter writer = new BinaryWriter(stream);
+                
                 //Принимаем запрос клиента
                 string Request = reader.ReadString();
+                
                 //Проверка связи
                 if (Request == "Ping")
                 {
                     writer.Write("Pong");
                 }
+                //Список пользователей
                 if (Request == "ReadUserList")
                 {
                     writer.Write(Users.Count);
@@ -65,6 +72,33 @@ namespace Server
                     }
                     SaveUsers();
                 }
+                //Список контрольных точек
+                if (Request == "ReadCheckPoints")
+                {
+                    writer.Write(CheckPoints.Count);
+                    foreach (CheckPoint cp in CheckPoints)
+                    {
+                        writer.Write(cp.Name);
+                        writer.Write(cp.Description);
+                        writer.Write(cp.Camera);
+                        writer.Write(cp.Login);
+                        writer.Write(cp.Password);
+                    }
+                }
+                if (Request == "WriteCheckPoints")
+                {
+                    int c = reader.ReadInt32();
+                    CheckPoints.Clear();
+                    for (int i = 0; i < c; i++)
+                    {
+                        CheckPoints.Add(new CheckPoint(reader.ReadString(),
+                                                       reader.ReadString(),
+                                                       reader.ReadString(),
+                                                       reader.ReadString(),
+                                                       reader.ReadString()));
+                    }
+                    SaveCP();
+                }
             }
         }
 
@@ -72,7 +106,7 @@ namespace Server
         {
             Console.WriteLine(DateTime.Now + ": " + rec);
         }
-
+        #region FILES
         /// <summary>
         /// Загрузка списка пользователей из файла
         /// </summary>
@@ -82,10 +116,8 @@ namespace Server
             {
                 using (TextReader file = File.OpenText(UsersFile))
                 {
-                    string n;
+                    string n, k;
                     int t;
-                    string k;
-                    //while (s != null)
                     do
                     {
                         n = file.ReadLine();
@@ -117,5 +149,52 @@ namespace Server
             }
             catch { }
         }
+
+        /// <summary>
+        /// Загрузка списка контрольных точек из файла
+        /// </summary>
+        static void LoadCP()
+        {
+            try
+            {
+                using (TextReader file = File.OpenText(CPFile))
+                {
+                    string n, d, c, l, p;
+                    do
+                    {
+                        n = file.ReadLine();
+                        d = file.ReadLine();
+                        c = file.ReadLine();
+                        l = file.ReadLine();
+                        p = file.ReadLine();
+                        if (p != null) CheckPoints.Add(new CheckPoint(n, d, c, l, p));
+                    } while (p != null);
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Сохранение списка контрольных точек в файл
+        /// </summary>
+        static void SaveCP()
+        {
+            try
+            {
+                using (TextWriter file = File.CreateText(CPFile))
+                {
+                    foreach (CheckPoint cp in CheckPoints)
+                    {
+                        file.WriteLine(cp.Name);
+                        file.WriteLine(cp.Description);
+                        file.WriteLine(cp.Camera);
+                        file.WriteLine(cp.Login);
+                        file.WriteLine(cp.Password);
+                    }
+                }
+            }
+            catch { }
+        }
+        #endregion
     }
 }

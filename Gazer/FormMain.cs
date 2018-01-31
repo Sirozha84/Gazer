@@ -69,5 +69,11 @@ namespace Gazer
             FormUsers form = new FormUsers();
             form.ShowDialog();
         }
+
+        private void контрольныеТочкиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormCP form = new FormCP();
+            form.ShowDialog();
+        }
     }
 }
