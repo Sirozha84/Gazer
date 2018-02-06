@@ -9,18 +9,14 @@ namespace Server
 {
     class Program
     {
-        static string UsersFile = "Users.txt";
-        static List<User> Users = new List<User>();
-        static string CPFile = "CheckPoints.txt";
-        static List<CheckPoint> CheckPoints = new List<CheckPoint>();
-
         static void Main(string[] args)
         {
-            Console.WriteLine("Gazer Sever     Версия 1.0 (26.01.2018)\n");
+            Console.WriteLine("Gazer Server     Версия 1.0 (26.01.2018)\n");
             
             //Загрузка списка данных из файлов
-            LoadUsers();
-            LoadCP();
+            Data.LoadUsers();
+            Data.LoadCP();
+            Data.LoadDir();
 
             //Запуск сервера
             TcpListener server = new TcpListener(IPAddress.Any, 8081);
@@ -52,8 +48,8 @@ namespace Server
                 //Список пользователей
                 if (Request == "ReadUserList")
                 {
-                    writer.Write(Users.Count);
-                    foreach (User user in Users)
+                    writer.Write(Data.Users.Count);
+                    foreach (User user in Data.Users)
                     {
                         writer.Write(user.Name);
                         writer.Write(user.Type);
@@ -63,16 +59,16 @@ namespace Server
                 if (Request == "WriteUserList")
                 {
                     int c = reader.ReadInt32();
-                    Users.Clear();
+                    Data.Users.Clear();
                     for (int i = 0; i < c; i++)
-                        Users.Add(new User(reader.ReadString(), reader.ReadInt32(), reader.ReadString()));
-                    SaveUsers();
+                        Data.Users.Add(new User(reader.ReadString(), reader.ReadInt32(), reader.ReadString()));
+                    Data.SaveUsers();
                 }
                 //Список контрольных точек
                 if (Request == "ReadCheckPoints")
                 {
-                    writer.Write(CheckPoints.Count);
-                    foreach (CheckPoint cp in CheckPoints)
+                    writer.Write(Data.CheckPoints.Count);
+                    foreach (CheckPoint cp in Data.CheckPoints)
                     {
                         writer.Write(cp.Name);
                         writer.Write(cp.Description);
@@ -86,21 +82,30 @@ namespace Server
                 if (Request == "WriteCheckPoints")
                 {
                     int c = reader.ReadInt32();
-                    CheckPoints.Clear();
+                    Data.CheckPoints.Clear();
                     for (int i = 0; i < c; i++)
-                        CheckPoints.Add(new CheckPoint(reader.ReadString(), reader.ReadString(),
+                        Data.CheckPoints.Add(new CheckPoint(reader.ReadString(), reader.ReadString(),
                                                        reader.ReadBoolean(), reader.ReadBoolean(),
                                                        reader.ReadString(), reader.ReadString(), reader.ReadString()));
-                    SaveCP();
+                    Data.SaveCP();
+                }
+                if (Request == "ReadDir")
+                {
+                    writer.Write(Data.Dir);
+                }
+                if (Request == "WriteDir")
+                {
+                    Data.Dir = reader.ReadString();
+                    Data.SaveDir();
                 }
                 //Отметка сотрудника
                 if (Request == "Mark")
                 {
                     //Проверяем кто к нам и откуда ломится
                     string s = reader.ReadString();
-                    CheckPoint cp = CheckPoints.Find(o => o.Name == s);
+                    CheckPoint cp = Data.CheckPoints.Find(o => o.Name == s);
                     s = reader.ReadString();
-                    User user = Users.Find(o => o.Key == s);
+                    User user = Data.Users.Find(o => o.Key == s);
                     if (cp == null) writer.Write("CPNotfound");
                     else if (user == null) writer.Write("UserNotfound");
                     else
@@ -109,114 +114,55 @@ namespace Server
                         if (user.Type == 0)
                         {
                             writer.Write("Result");
-                            Console.WriteLine( reader.ReadString());
+                            Check(cp, user, reader.ReadString());
+                            writer.Write("OK");
                         }
                         else
+                        {
+                            Check(cp, user, "OK");
                             writer.Write("OK");
+                        }
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Регистрация отметки пользователя
+        /// </summary>
+        /// <param name="cp">Чекпоинт</param>
+        /// <param name="u">Пользователь</param>
+        /// <param name="res">Результат проверки</param>
+        static void Check(CheckPoint cp, User u, string res)
+        {
+            string photo = ""; //Строка с полученным фото
+            //Directory.CreateDirectory(dir);
+
+            Directory.CreateDirectory("Logs");
+            string filename = "Logs\\" + DateTime.Now.ToString("yyyy.MM.dd") + ".txt";
+            using (StreamWriter file = File.AppendText(filename))
+            {
+                file.WriteLine(cp.Name);
+                file.WriteLine(u.Name);
+                file.WriteLine(res);
+                file.WriteLine(photo);
+            }
+            Log(cp.Name + " " + u.Name + " " + res);
+
+        }
+
+        /// <summary>
+        /// Запись лога программы
+        /// </summary>
+        /// <param name="rec">Запись</param>
         static void Log(string rec)
         {
-            Console.WriteLine(DateTime.Now + ": " + rec);
+            rec = DateTime.Now.ToString("[yyyy.MM.dd HH:mm] ") + rec;
+            Console.WriteLine(rec);
+            using (StreamWriter file = File.AppendText("Log.txt"))
+                file.WriteLine(rec);
         }
 
-        #region FILES
-        /// <summary>
-        /// Загрузка списка пользователей из файла
-        /// </summary>
-        static void LoadUsers()
-        {
-            try
-            {
-                using (TextReader file = File.OpenText(UsersFile))
-                {
-                    string n, k;
-                    int t;
-                    do
-                    {
-                        n = file.ReadLine();
-                        t = Convert.ToInt32(file.ReadLine());
-                        k = file.ReadLine();
-                        if (k != null) Users.Add(new User(n, t, k));
-                    } while (k != null);
-                }
-            }
-            catch { }
-        }
-
-        /// <summary>
-        /// Сохранение списка пользователей в файл
-        /// </summary>
-        static void SaveUsers()
-        {
-            try
-            {
-                using (TextWriter file = File.CreateText(UsersFile))
-                {
-                    foreach(User u in Users)
-                    {
-                        file.WriteLine(u.Name);
-                        file.WriteLine(u.Type);
-                        file.WriteLine(u.Key);
-                    }
-                }
-            }
-            catch { }
-        }
-
-        /// <summary>
-        /// Загрузка списка контрольных точек из файла
-        /// </summary>
-        static void LoadCP()
-        {
-            try
-            {
-                using (TextReader file = File.OpenText(CPFile))
-                {
-                    string n, d, ip, l, p;
-                    bool r, c;
-                    do
-                    {
-                        n = file.ReadLine();
-                        d = file.ReadLine();
-                        r = Convert.ToBoolean(file.ReadLine());
-                        c = Convert.ToBoolean(file.ReadLine());
-                        ip = file.ReadLine();
-                        l = file.ReadLine();
-                        p = file.ReadLine();
-                        if (p != null) CheckPoints.Add(new CheckPoint(n, d, r, c, ip, l, p));
-                    } while (p != null);
-                }
-            }
-            catch { }
-        }
-
-        /// <summary>
-        /// Сохранение списка контрольных точек в файл
-        /// </summary>
-        static void SaveCP()
-        {
-            try
-            {
-                using (TextWriter file = File.CreateText(CPFile))
-                {
-                    foreach (CheckPoint cp in CheckPoints)
-                    {
-                        file.WriteLine(cp.Name);
-                        file.WriteLine(cp.Description);
-                        file.WriteLine(cp.Result);
-                        file.WriteLine(cp.Camera);
-                        file.WriteLine(cp.IP);
-                        file.WriteLine(cp.Login);
-                        file.WriteLine(cp.Password);
-                    }
-                }
-            }
-            catch { }
-        }
-        #endregion
+        
     }
 }

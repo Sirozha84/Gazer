@@ -83,6 +83,12 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormDir.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDir.Designer.cs">
+      <DependentUpon>FormDir.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,6 +122,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDir.resx">
+      <DependentUpon>FormDir.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormProperties.resx">
       <DependentUpon>FormProperties.cs</DependentUpon>

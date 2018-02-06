@@ -56,6 +56,8 @@ namespace Gazer
         {
             toolStripStatusLabelStatus.Text = "Статус: " + (OK ? "OK" : "Ошибка соединения с сервером");
             пользователиToolStripMenuItem.Enabled = OK;
+            контрольныеТочкиToolStripMenuItem.Enabled = OK;
+            параметрыХранилищаToolStripMenuItem.Enabled = OK;
             monthCalendar1.Enabled = OK;
             buttonAll.Enabled = OK;
             buttonNone.Enabled = OK;
@@ -72,6 +74,12 @@ namespace Gazer
         private void контрольныеТочкиToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormCP form = new FormCP();
+            form.ShowDialog();
+        }
+
+        private void параметрыХранилищаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormDir form = new FormDir();
             form.ShowDialog();
         }
     }

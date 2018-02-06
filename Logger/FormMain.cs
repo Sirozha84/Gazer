@@ -98,6 +98,8 @@ namespace Logger
                                 FormResult form = new FormResult();
                                 form.ShowDialog();
                                 writer.Write(form.Result);
+                                if (reader.ReadString() == "OK")
+                                    Message("Спасибо за визит!");
                             }
                         }
                     }
