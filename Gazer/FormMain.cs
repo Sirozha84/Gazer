@@ -54,8 +54,7 @@ namespace Gazer
 
         void SetStatus(bool OK)
         {
-            toolStripStatusLabelStatus.Text = "Статус: " +
-                (OK ? "OK" : "Ошибка соединения с сервером");
+            toolStripStatusLabelStatus.Text = "Статус: " + (OK ? "OK" : "Ошибка соединения с сервером");
             пользователиToolStripMenuItem.Enabled = OK;
             monthCalendar1.Enabled = OK;
             buttonAll.Enabled = OK;

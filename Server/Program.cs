@@ -65,11 +65,7 @@ namespace Server
                     int c = reader.ReadInt32();
                     Users.Clear();
                     for (int i = 0; i < c; i++)
-                    {
-                        Users.Add(new User(reader.ReadString(),
-                                           reader.ReadInt32(),
-                                           reader.ReadString()));
-                    }
+                        Users.Add(new User(reader.ReadString(), reader.ReadInt32(), reader.ReadString()));
                     SaveUsers();
                 }
                 //Список контрольных точек
@@ -80,7 +76,9 @@ namespace Server
                     {
                         writer.Write(cp.Name);
                         writer.Write(cp.Description);
+                        writer.Write(cp.Result);
                         writer.Write(cp.Camera);
+                        writer.Write(cp.IP);
                         writer.Write(cp.Login);
                         writer.Write(cp.Password);
                     }
@@ -90,14 +88,32 @@ namespace Server
                     int c = reader.ReadInt32();
                     CheckPoints.Clear();
                     for (int i = 0; i < c; i++)
-                    {
-                        CheckPoints.Add(new CheckPoint(reader.ReadString(),
-                                                       reader.ReadString(),
-                                                       reader.ReadString(),
-                                                       reader.ReadString(),
-                                                       reader.ReadString()));
-                    }
+                        CheckPoints.Add(new CheckPoint(reader.ReadString(), reader.ReadString(),
+                                                       reader.ReadBoolean(), reader.ReadBoolean(),
+                                                       reader.ReadString(), reader.ReadString(), reader.ReadString()));
                     SaveCP();
+                }
+                //Отметка сотрудника
+                if (Request == "Mark")
+                {
+                    //Проверяем кто к нам и откуда ломится
+                    string s = reader.ReadString();
+                    CheckPoint cp = CheckPoints.Find(o => o.Name == s);
+                    s = reader.ReadString();
+                    User user = Users.Find(o => o.Key == s);
+                    if (cp == null) writer.Write("CPNotfound");
+                    else if (user == null) writer.Write("UserNotfound");
+                    else
+                    {
+                        //Пользователь опознан, спрашиваем, если надо, дополнительные сведения
+                        if (user.Type == 0)
+                        {
+                            writer.Write("Result");
+                            Console.WriteLine( reader.ReadString());
+                        }
+                        else
+                            writer.Write("OK");
+                    }
                 }
             }
         }
@@ -106,6 +122,7 @@ namespace Server
         {
             Console.WriteLine(DateTime.Now + ": " + rec);
         }
+
         #region FILES
         /// <summary>
         /// Загрузка списка пользователей из файла
@@ -159,15 +176,18 @@ namespace Server
             {
                 using (TextReader file = File.OpenText(CPFile))
                 {
-                    string n, d, c, l, p;
+                    string n, d, ip, l, p;
+                    bool r, c;
                     do
                     {
                         n = file.ReadLine();
                         d = file.ReadLine();
-                        c = file.ReadLine();
+                        r = Convert.ToBoolean(file.ReadLine());
+                        c = Convert.ToBoolean(file.ReadLine());
+                        ip = file.ReadLine();
                         l = file.ReadLine();
                         p = file.ReadLine();
-                        if (p != null) CheckPoints.Add(new CheckPoint(n, d, c, l, p));
+                        if (p != null) CheckPoints.Add(new CheckPoint(n, d, r, c, ip, l, p));
                     } while (p != null);
                 }
             }
@@ -187,7 +207,9 @@ namespace Server
                     {
                         file.WriteLine(cp.Name);
                         file.WriteLine(cp.Description);
+                        file.WriteLine(cp.Result);
                         file.WriteLine(cp.Camera);
+                        file.WriteLine(cp.IP);
                         file.WriteLine(cp.Login);
                         file.WriteLine(cp.Password);
                     }

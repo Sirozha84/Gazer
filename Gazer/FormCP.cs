@@ -37,11 +37,9 @@ namespace Gazer
                         int c = reader.ReadInt32();
                         for (int i = 0; i < c; i++)
                         {
-                            CheckPoints.Add(new CheckPoint(reader.ReadString(),
-                                                           reader.ReadString(),
-                                                           reader.ReadString(),
-                                                           reader.ReadString(),
-                                                           reader.ReadString()));
+                            CheckPoints.Add(new CheckPoint(reader.ReadString(), reader.ReadString(),
+                                                           reader.ReadBoolean(), reader.ReadBoolean(),
+                                                           reader.ReadString(), reader.ReadString(), reader.ReadString()));
                         }
                     }
                 }
@@ -59,7 +57,8 @@ namespace Gazer
                 ListViewItem lvi = new ListViewItem();
                 lvi.Text = cp.Name;
                 lvi.SubItems.Add(cp.Description);
-                lvi.SubItems.Add(cp.Camera);
+                lvi.SubItems.Add(cp.Result ? "Включено" : "Нет");
+                lvi.SubItems.Add(cp.Camera ? "Включено" : "Нет");
                 listViewCP.Items.Add(lvi);
             }
             listViewCP.EndUpdate();
@@ -91,7 +90,9 @@ namespace Gazer
                         {
                             writer.Write(cp.Name);
                             writer.Write(cp.Description);
+                            writer.Write(cp.Result);
                             writer.Write(cp.Camera);
+                            writer.Write(cp.IP);
                             writer.Write(cp.Login);
                             writer.Write(cp.Password);
                         }
@@ -109,11 +110,12 @@ namespace Gazer
 
         private void buttonNew_Click(object sender, EventArgs e)
         {
-            FormEditCP form = new FormEditCP(true, "", "", "", "", "");
+            FormEditCP form = new FormEditCP(true, "", "", false, false, "", "", "");
             if (form.ShowDialog() == DialogResult.OK)
             {
-                CheckPoints.Add(new CheckPoint(form.Name, form.Description, form.Camera,
-                                               form.Login, form.Password));
+                CheckPoints.Add(new CheckPoint(form.Name, form.Description,
+                                               form.Result, form.Camera,
+                                               form.IP, form.Login, form.Password));
                 DrawList();
             }
         }
@@ -131,13 +133,16 @@ namespace Gazer
         void Edit()
         {
             CheckPoint cp = CheckPoints[listViewCP.SelectedIndices[0]];
-            FormEditCP form = new FormEditCP(false, cp.Name, cp.Description, cp.Camera,
-                                                    cp.Login, cp.Password);
+            FormEditCP form = new FormEditCP(false, cp.Name, cp.Description,
+                                                    cp.Result, cp.Camera,
+                                                    cp.IP, cp.Login, cp.Password);
             if (form.ShowDialog() == DialogResult.OK)
             {
                 cp.Name = form.Name;
                 cp.Description = form.Description;
+                cp.Result = form.Result;
                 cp.Camera = form.Camera;
+                cp.IP = form.IP;
                 cp.Login = form.Login;
                 cp.Password = form.Password;
                 DrawList();

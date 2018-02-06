@@ -37,6 +37,7 @@
             this.columnHeaderDesc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderCam = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.columnHeaderRes = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // buttonOK
@@ -93,6 +94,7 @@
             this.listViewCP.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName,
             this.columnHeaderDesc,
+            this.columnHeaderRes,
             this.columnHeaderCam});
             this.listViewCP.FullRowSelect = true;
             this.listViewCP.GridLines = true;
@@ -118,8 +120,8 @@
             // 
             // columnHeaderCam
             // 
-            this.columnHeaderCam.Text = "Камера";
-            this.columnHeaderCam.Width = 150;
+            this.columnHeaderCam.Text = "Фото";
+            this.columnHeaderCam.Width = 70;
             // 
             // buttonCancel
             // 
@@ -132,6 +134,11 @@
             this.buttonCancel.Text = "Отмена";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
+            // columnHeaderRes
+            // 
+            this.columnHeaderRes.Text = "Разультат";
+            this.columnHeaderRes.Width = 70;
             // 
             // FormCP
             // 
@@ -170,5 +177,6 @@
         private System.Windows.Forms.ColumnHeader columnHeaderDesc;
         private System.Windows.Forms.ColumnHeader columnHeaderCam;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.ColumnHeader columnHeaderRes;
     }
 }
