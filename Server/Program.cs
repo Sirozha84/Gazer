@@ -11,7 +11,7 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Gazer Server     Версия 1.0 (26.01.2018)\n");
+            Console.WriteLine("Gazer Server     Версия 1.0 (07.01.2018)\n");
             
             //Загрузка списка данных из файлов
             Data.LoadUsers();

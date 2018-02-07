@@ -23,6 +23,10 @@ namespace Logger
         {
             InitializeComponent();
             labelKey.Text = TextWait;
+            Properties.Settings.Default.Name = Properties.Settings.Default.Name;
+            Properties.Settings.Default.Server = Properties.Settings.Default.Server;
+            Properties.Settings.Default.Port = Properties.Settings.Default.Port;
+            Properties.Settings.Default.Save();
         }
 
         private void timerPing_Tick(object sender, EventArgs e)

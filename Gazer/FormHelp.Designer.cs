@@ -94,7 +94,7 @@
             this.richTextBoxHystory.Name = "richTextBoxHystory";
             this.richTextBoxHystory.Size = new System.Drawing.Size(610, 434);
             this.richTextBoxHystory.TabIndex = 1;
-            this.richTextBoxHystory.Text = "Версия 0.0.0.0 (25.01.2018)\nНачала своё существование!";
+            this.richTextBoxHystory.Text = resources.GetString("richTextBoxHystory.Text");
             // 
             // FormHelp
             // 
