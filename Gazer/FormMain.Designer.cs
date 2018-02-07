@@ -36,6 +36,7 @@
             this.пользователиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.контрольныеТочкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.параметрыХранилищаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.параметрыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,17 +49,16 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.monthCal = new System.Windows.Forms.MonthCalendar();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.labelNotImage = new System.Windows.Forms.Label();
             this.checkedListBoxUsers = new System.Windows.Forms.CheckedListBox();
             this.buttonAll = new System.Windows.Forms.Button();
             this.buttonNone = new System.Windows.Forms.Button();
             this.timerPing = new System.Windows.Forms.Timer(this.components);
-            this.параметрыХранилищаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -118,6 +118,13 @@
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(214, 6);
+            // 
+            // параметрыХранилищаToolStripMenuItem
+            // 
+            this.параметрыХранилищаToolStripMenuItem.Name = "параметрыХранилищаToolStripMenuItem";
+            this.параметрыХранилищаToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.параметрыХранилищаToolStripMenuItem.Text = "Хранилище снимков";
+            this.параметрыХранилищаToolStripMenuItem.Click += new System.EventHandler(this.параметрыХранилищаToolStripMenuItem_Click);
             // 
             // параметрыToolStripMenuItem
             // 
@@ -181,12 +188,14 @@
             this.columnHeader2,
             this.columnHeader3,
             this.columnHeader4});
+            this.listViewLog.FullRowSelect = true;
             this.listViewLog.Location = new System.Drawing.Point(188, 27);
             this.listViewLog.Name = "listViewLog";
             this.listViewLog.Size = new System.Drawing.Size(584, 507);
             this.listViewLog.TabIndex = 3;
             this.listViewLog.UseCompatibleStateImageBehavior = false;
             this.listViewLog.View = System.Windows.Forms.View.Details;
+            this.listViewLog.SelectedIndexChanged += new System.EventHandler(this.listViewLog_SelectedIndexChanged);
             // 
             // columnHeader1
             // 
@@ -207,21 +216,25 @@
             this.columnHeader4.Text = "Отметка в журнале";
             this.columnHeader4.Width = 240;
             // 
-            // monthCalendar1
+            // monthCal
             // 
-            this.monthCalendar1.Location = new System.Drawing.Point(12, 27);
-            this.monthCalendar1.Name = "monthCalendar1";
-            this.monthCalendar1.TabIndex = 5;
+            this.monthCal.Location = new System.Drawing.Point(12, 27);
+            this.monthCal.MaxSelectionCount = 1;
+            this.monthCal.Name = "monthCal";
+            this.monthCal.TabIndex = 5;
+            this.monthCal.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.monthCal_DateSelected);
             // 
-            // pictureBox1
+            // pictureBox
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 396);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(163, 135);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 6;
-            this.pictureBox1.TabStop = false;
+            this.pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.pictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBox.Location = new System.Drawing.Point(12, 396);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(163, 135);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox.TabIndex = 6;
+            this.pictureBox.TabStop = false;
+            this.pictureBox.Click += new System.EventHandler(this.pictureBox_Click);
             // 
             // labelNotImage
             // 
@@ -243,6 +256,7 @@
             this.checkedListBoxUsers.Name = "checkedListBoxUsers";
             this.checkedListBoxUsers.Size = new System.Drawing.Size(163, 154);
             this.checkedListBoxUsers.TabIndex = 8;
+            this.checkedListBoxUsers.Visible = false;
             // 
             // buttonAll
             // 
@@ -252,6 +266,7 @@
             this.buttonAll.TabIndex = 9;
             this.buttonAll.Text = "Все";
             this.buttonAll.UseVisualStyleBackColor = true;
+            this.buttonAll.Visible = false;
             // 
             // buttonNone
             // 
@@ -261,19 +276,13 @@
             this.buttonNone.TabIndex = 10;
             this.buttonNone.Text = "Никого";
             this.buttonNone.UseVisualStyleBackColor = true;
+            this.buttonNone.Visible = false;
             // 
             // timerPing
             // 
             this.timerPing.Enabled = true;
             this.timerPing.Interval = 3000;
             this.timerPing.Tick += new System.EventHandler(this.timerPing_Tick);
-            // 
-            // параметрыХранилищаToolStripMenuItem
-            // 
-            this.параметрыХранилищаToolStripMenuItem.Name = "параметрыХранилищаToolStripMenuItem";
-            this.параметрыХранилищаToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
-            this.параметрыХранилищаToolStripMenuItem.Text = "Хранилище снимков";
-            this.параметрыХранилищаToolStripMenuItem.Click += new System.EventHandler(this.параметрыХранилищаToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -283,22 +292,23 @@
             this.Controls.Add(this.buttonNone);
             this.Controls.Add(this.buttonAll);
             this.Controls.Add(this.checkedListBoxUsers);
-            this.Controls.Add(this.monthCalendar1);
+            this.Controls.Add(this.monthCal);
             this.Controls.Add(this.listViewLog);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.labelNotImage);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pictureBox);
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "FormMain";
             this.Text = "Gazer Admin";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -317,8 +327,8 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelStatus;
         private System.Windows.Forms.ListView listViewLog;
-        private System.Windows.Forms.MonthCalendar monthCalendar1;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.MonthCalendar monthCal;
+        private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.Label labelNotImage;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;

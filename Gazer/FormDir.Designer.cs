@@ -32,6 +32,7 @@
             this.textBoxDir = new System.Windows.Forms.TextBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonDir = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // labelServer
@@ -45,9 +46,9 @@
             // 
             // textBoxDir
             // 
-            this.textBoxDir.Location = new System.Drawing.Point(15, 43);
+            this.textBoxDir.Location = new System.Drawing.Point(12, 43);
             this.textBoxDir.Name = "textBoxDir";
-            this.textBoxDir.Size = new System.Drawing.Size(329, 20);
+            this.textBoxDir.Size = new System.Drawing.Size(268, 20);
             this.textBoxDir.TabIndex = 1;
             // 
             // buttonOK
@@ -73,6 +74,16 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // buttonDir
+            // 
+            this.buttonDir.Location = new System.Drawing.Point(286, 43);
+            this.buttonDir.Name = "buttonDir";
+            this.buttonDir.Size = new System.Drawing.Size(58, 20);
+            this.buttonDir.TabIndex = 4;
+            this.buttonDir.Text = "Обзор";
+            this.buttonDir.UseVisualStyleBackColor = true;
+            this.buttonDir.Click += new System.EventHandler(this.buttonDir_Click);
+            // 
             // FormDir
             // 
             this.AcceptButton = this.buttonOK;
@@ -80,6 +91,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(356, 119);
+            this.Controls.Add(this.buttonDir);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.textBoxDir);
@@ -104,5 +116,6 @@
         private System.Windows.Forms.TextBox textBoxDir;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Button buttonDir;
     }
 }

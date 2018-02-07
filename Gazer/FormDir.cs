@@ -64,5 +64,13 @@ namespace Gazer
             catch { }
             Close();
         }
+
+        private void buttonDir_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dir = new FolderBrowserDialog();
+            dir.SelectedPath = textBoxDir.Text;
+            if (dir.ShowDialog() == DialogResult.OK)
+                textBoxDir.Text = dir.SelectedPath;
+        }
     }
 }

@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.Threading;
-using System.Collections.Generic;
+using System.Drawing;
 
 namespace Server
 {
@@ -99,7 +99,7 @@ namespace Server
                     Data.SaveDir();
                 }
                 //Отметка сотрудника
-                if (Request == "Mark")
+                if (Request == "Check")
                 {
                     //Проверяем кто к нам и откуда ломится
                     string s = reader.ReadString();
@@ -110,19 +110,39 @@ namespace Server
                     else if (user == null) writer.Write("UserNotfound");
                     else
                     {
-                        //Пользователь опознан, спрашиваем, если надо, дополнительные сведения
-                        if (user.Type == 0)
+                        //Пользователь опознан, спрашиваем дополнительные сведения
+                        //если это контролёр ОТК и если эта контрольная точка оснащена монитором
+                        if (user.Type == 0 && cp.Result)
                         {
                             writer.Write("Result");
-                            Check(cp, user, reader.ReadString());
                             writer.Write("OK");
+                            Check(cp, user, reader.ReadString());
                         }
                         else
                         {
-                            Check(cp, user, "OK");
                             writer.Write("OK");
+                            Check(cp, user, "OK");
                         }
                     }
+                }
+                //Запрос журнала
+                if (Request == "ReadLog")
+                {
+                    string date = reader.ReadString();
+                    try
+                    {
+                        using (TextReader file = File.OpenText("Logs\\" + date + ".txt"))
+                        {
+                            string s;
+                            do
+                            {
+                                s = file.ReadLine();
+                                writer.Write(s);
+                            } while (s != null);
+                            writer.Write("End");
+                        }
+                    }
+                    catch { }
                 }
             }
         }
@@ -135,20 +155,39 @@ namespace Server
         /// <param name="res">Результат проверки</param>
         static void Check(CheckPoint cp, User u, string res)
         {
+            DateTime time = DateTime.Now;
             string photo = ""; //Строка с полученным фото
-            //Directory.CreateDirectory(dir);
-
+            //Запрашиваем фото с камеры, если это нужно
+            if (cp.Camera)
+            {
+                //Запрос
+                string URL = "http://" + cp.IP + "/Streaming/channels/1/picture";
+                byte[] buffer = new byte[1000000];
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(URL);
+                req.Credentials = new NetworkCredential(cp.Login, cp.Password);
+                WebResponse resp = req.GetResponse();
+                Stream stream = resp.GetResponseStream();
+                int read, total = 0;
+                while ((read = stream.Read(buffer, total, 1000)) != 0) { total += read; }
+                Bitmap bmp = (Bitmap)Bitmap.FromStream(new MemoryStream(buffer, 0, total));
+                //Сохранение в файл
+                string dir = Data.Dir + "\\" + time.ToString("yyyy.MM.dd");
+                Directory.CreateDirectory(dir);
+                photo = dir + "\\" + time.ToString("HHmmss") + ".jpg";
+                bmp.Save(photo);
+            }
+            //Делаем запись в журнале
             Directory.CreateDirectory("Logs");
-            string filename = "Logs\\" + DateTime.Now.ToString("yyyy.MM.dd") + ".txt";
+            string filename = "Logs\\" + time.ToString("yyyy.MM.dd") + ".txt";
             using (StreamWriter file = File.AppendText(filename))
             {
+                file.WriteLine(time.ToString("HH:mm"));
                 file.WriteLine(cp.Name);
                 file.WriteLine(u.Name);
                 file.WriteLine(res);
                 file.WriteLine(photo);
             }
             Log(cp.Name + " " + u.Name + " " + res);
-
         }
 
         /// <summary>

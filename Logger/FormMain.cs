@@ -85,7 +85,7 @@ namespace Logger
                             BinaryWriter writer = new BinaryWriter(stream);
                             BinaryReader reader = new BinaryReader(stream);
                             //Посылаем сообщение
-                            writer.Write("Mark");
+                            writer.Write("Check");
                             writer.Write(Properties.Settings.Default.Name);
                             writer.Write(Key);
                             //Читаем ответ от сервера

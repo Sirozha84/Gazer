@@ -52,6 +52,7 @@
             this.tabControlHelp.SelectedIndex = 0;
             this.tabControlHelp.Size = new System.Drawing.Size(624, 473);
             this.tabControlHelp.TabIndex = 0;
+            this.tabControlHelp.TabStop = false;
             // 
             // tabPageHelp
             // 
