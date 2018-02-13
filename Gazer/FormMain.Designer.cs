@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,7 +56,8 @@
             this.checkedListBoxUsers = new System.Windows.Forms.CheckedListBox();
             this.buttonAll = new System.Windows.Forms.Button();
             this.buttonNone = new System.Windows.Forms.Button();
-            this.timerPing = new System.Windows.Forms.Timer();
+            this.timerPing = new System.Windows.Forms.Timer(this.components);
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -187,7 +189,8 @@
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3,
-            this.columnHeader4});
+            this.columnHeader4,
+            this.columnHeader5});
             this.listViewLog.FullRowSelect = true;
             this.listViewLog.Location = new System.Drawing.Point(188, 27);
             this.listViewLog.Name = "listViewLog";
@@ -214,7 +217,7 @@
             // columnHeader4
             // 
             this.columnHeader4.Text = "Отметка в журнале";
-            this.columnHeader4.Width = 240;
+            this.columnHeader4.Width = 120;
             // 
             // monthCal
             // 
@@ -284,6 +287,11 @@
             this.timerPing.Interval = 3000;
             this.timerPing.Tick += new System.EventHandler(this.timerPing_Tick);
             // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Фото";
+            this.columnHeader5.Width = 120;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -344,6 +352,7 @@
         private System.Windows.Forms.ToolStripMenuItem контрольныеТочкиToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem параметрыХранилищаToolStripMenuItem;
+        private System.Windows.Forms.ColumnHeader columnHeader5;
     }
 }
 

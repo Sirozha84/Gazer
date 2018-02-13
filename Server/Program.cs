@@ -11,7 +11,7 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Gazer Server     Версия 1.0 (07.01.2018)\n");
+            Console.WriteLine("Gazer Server     Версия 1.0 (07.02.2018)\n");
             
             //Загрузка списка данных из файлов
             Data.LoadUsers();
@@ -85,8 +85,8 @@ namespace Server
                     Data.CheckPoints.Clear();
                     for (int i = 0; i < c; i++)
                         Data.CheckPoints.Add(new CheckPoint(reader.ReadString(), reader.ReadString(),
-                                                       reader.ReadBoolean(), reader.ReadBoolean(),
-                                                       reader.ReadString(), reader.ReadString(), reader.ReadString()));
+                                                            reader.ReadBoolean(), reader.ReadBoolean(),
+                                                            reader.ReadString(), reader.ReadString(), reader.ReadString()));
                     Data.SaveCP();
                 }
                 if (Request == "ReadDir")
@@ -160,21 +160,28 @@ namespace Server
             //Запрашиваем фото с камеры, если это нужно
             if (cp.Camera)
             {
-                //Запрос
-                string URL = "http://" + cp.IP + "/Streaming/channels/1/picture";
-                byte[] buffer = new byte[1000000];
-                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(URL);
-                req.Credentials = new NetworkCredential(cp.Login, cp.Password);
-                WebResponse resp = req.GetResponse();
-                Stream stream = resp.GetResponseStream();
-                int read, total = 0;
-                while ((read = stream.Read(buffer, total, 1000)) != 0) { total += read; }
-                Bitmap bmp = (Bitmap)Bitmap.FromStream(new MemoryStream(buffer, 0, total));
-                //Сохранение в файл
-                string dir = Data.Dir + "\\" + time.ToString("yyyy.MM.dd");
-                Directory.CreateDirectory(dir);
-                photo = dir + "\\" + time.ToString("HHmmss") + ".jpg";
-                bmp.Save(photo);
+                try
+                {
+                    //Запрос
+                    string URL = "http://" + cp.IP + "/Streaming/channels/1/picture";
+                    byte[] buffer = new byte[1000000];
+                    HttpWebRequest req = (HttpWebRequest)WebRequest.Create(URL);
+                    req.Credentials = new NetworkCredential(cp.Login, cp.Password);
+                    WebResponse resp = req.GetResponse();
+                    Stream stream = resp.GetResponseStream();
+                    int read, total = 0;
+                    while ((read = stream.Read(buffer, total, 1000)) != 0) { total += read; }
+                    Bitmap bmp = (Bitmap)Bitmap.FromStream(new MemoryStream(buffer, 0, total));
+                    //Сохранение в файл
+                    string dir = Data.Dir + "\\" + time.ToString("yyyy.MM.dd");
+                    Directory.CreateDirectory(dir);
+                    photo = dir + "\\" + time.ToString("HHmmss") + ".jpg";
+                    bmp.Save(photo);
+                }
+                catch
+                {
+                    photo = "Error";
+                }
             }
             //Делаем запись в журнале
             Directory.CreateDirectory("Logs");

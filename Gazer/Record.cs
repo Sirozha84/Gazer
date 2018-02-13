@@ -26,7 +26,10 @@ namespace Gazer
 
         public ListViewItem Item()
         {
-            return new ListViewItem(new string[] { Time, CP, Name, Res });
+            string ph = "";
+            if (Photo != "") ph = "Есть";
+            if (Photo == "Error") ph = "Ошибка";
+            return new ListViewItem(new string[] { Time, CP, Name, Res, ph });
         }
     }
 }
