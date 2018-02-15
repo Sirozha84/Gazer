@@ -17,6 +17,7 @@ namespace Logger
         public FormResult()
         {
             InitializeComponent();
+            TopMost = true;
         }
 
         private void button1_Click(object sender, EventArgs e)

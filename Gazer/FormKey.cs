@@ -17,7 +17,7 @@ namespace Gazer
         {
             s++;
             Key += e.KeyValue.ToString();
-            if (s > 7)
+            if (s >= Properties.Settings.Default.KeyBytes)
             {
                 DialogResult = DialogResult.OK;
                 Close();

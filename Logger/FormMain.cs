@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.IO;
@@ -18,6 +12,8 @@ namespace Logger
         int SymCount;
         int SymCountLast;
         const string TextWait = "Приложите ключ к считывателю";
+        UserActivityHook actHook;
+        bool ask = false;
 
         public FormMain()
         {
@@ -27,6 +23,10 @@ namespace Logger
             Properties.Settings.Default.Server = Properties.Settings.Default.Server;
             Properties.Settings.Default.Port = Properties.Settings.Default.Port;
             Properties.Settings.Default.Save();
+
+            //Запускаем хук на отлов клавиатуры
+            actHook = new UserActivityHook(); 
+            actHook.KeyDown += new KeyEventHandler(MyKeyDown);
         }
 
         private void timerPing_Tick(object sender, EventArgs e)
@@ -71,46 +71,54 @@ namespace Logger
             SetStatus(Ping());
         }
 
-        private void FormMain_KeyDown(object sender, KeyEventArgs e)
+        private void MyKeyDown(object sender, KeyEventArgs e)
         {
+            //labelStatus.Text = e.KeyValue.ToString();
             Key += e.KeyValue.ToString();
             SymCount++;
-            if (SymCount > 7)
+            if (SymCount >= Properties.Settings.Default.KeyBytes)
             {
-                try
+                if (!ask)
                 {
-                    using (TcpClient client = new TcpClient())
+                    ask = true;
+                    try
                     {
-                        //client.ReceiveTimeout = 5000;
-                        client.Connect(Properties.Settings.Default.Server, Properties.Settings.Default.Port);
-                        using (NetworkStream stream = client.GetStream())
+                        using (TcpClient client = new TcpClient())
                         {
-                            Console.WriteLine(client.Connected);
-                            BinaryWriter writer = new BinaryWriter(stream);
-                            BinaryReader reader = new BinaryReader(stream);
-                            //Посылаем сообщение
-                            writer.Write("Check");
-                            writer.Write(Properties.Settings.Default.Name);
-                            writer.Write(Key);
-                            //Читаем ответ от сервера
-                            string Answer = reader.ReadString();
-                            if (Answer == "OK") Message("Спасибо за визит!");
-                            if (Answer == "CPNotfound") Error("Контрольная точка не зарегистрирована");
-                            if (Answer == "UserNotfound") Error("Ключ не зарегистрирован");
-                            if (Answer == "Result")
+                            //client.ReceiveTimeout = 5000;
+                            client.Connect(Properties.Settings.Default.Server, Properties.Settings.Default.Port);
+                            using (NetworkStream stream = client.GetStream())
                             {
-                                FormResult form = new FormResult();
-                                form.ShowDialog();
-                                writer.Write(form.Result);
-                                if (reader.ReadString() == "OK")
-                                    Message("Спасибо за визит!");
+                                Console.WriteLine(client.Connected);
+                                BinaryWriter writer = new BinaryWriter(stream);
+                                BinaryReader reader = new BinaryReader(stream);
+                                //Посылаем сообщение
+                                writer.Write("Check");
+                                writer.Write(Properties.Settings.Default.Name);
+                                writer.Write(Key);
+                                //Читаем ответ от сервера
+                                string Answer = reader.ReadString();
+                                if (Answer == "OK") Message("Спасибо за визит!");
+                                if (Answer == "CPNotfound") Error("Контрольная точка не зарегистрирована");
+                                if (Answer == "UserNotfound") Error("Ключ не зарегистрирован");
+                                if (Answer == "Result")
+                                {
+                                    labelKey.Text = "";
+                                    FormResult form = new FormResult();
+                                    form.ShowDialog();
+                                    writer.Write(form.Result);
+                                    if (reader.ReadString() == "OK")
+                                        Message("Спасибо за визит!");
+                                    form.Dispose(); //На всякий случай
+                                }
                             }
                         }
                     }
-                }
-                catch
-                {
-                    Error("Ошибка связи");
+                    catch
+                    {
+                        Error("Ошибка связи");
+                    }
+                    ask = false;
                 }
                 KeyReset();
             }
@@ -127,6 +135,9 @@ namespace Logger
         {
             SymCount = 0;
             Key = "";
+            //Почему-то если не делать перезапуск, ломается после 11-го окна с вопросом :-\
+            actHook.Stop();
+            actHook.Start();
         }
 
         void Message(string msg)
@@ -148,6 +159,12 @@ namespace Logger
             labelKey.Text = TextWait;
             labelKey.ForeColor = Color.Black;
             timerMessage.Enabled = false;
+        }
+
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //Закрываем хук при выходе, шоп комп не помер
+            actHook.Stop();
         }
     }
 }

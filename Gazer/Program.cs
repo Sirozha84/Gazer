@@ -5,7 +5,7 @@ namespace Gazer
 {
     static class Program
     {
-        public static string Date = "07.01.2018";
+        public static string Date = "15.02.2018";
 
         /// <summary>
         /// Главная точка входа для приложения.
