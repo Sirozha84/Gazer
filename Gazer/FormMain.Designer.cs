@@ -50,17 +50,23 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.monthCal = new System.Windows.Forms.MonthCalendar();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.labelNotImage = new System.Windows.Forms.Label();
             this.checkedListBoxUsers = new System.Windows.Forms.CheckedListBox();
-            this.buttonAll = new System.Windows.Forms.Button();
-            this.buttonNone = new System.Windows.Forms.Button();
             this.timerPing = new System.Windows.Forms.Timer(this.components);
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.checkBoxCP = new System.Windows.Forms.CheckBox();
+            this.checkedListBoxCP = new System.Windows.Forms.CheckedListBox();
+            this.checkBoxUsers = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -219,6 +225,11 @@
             this.columnHeader4.Text = "Отметка в журнале";
             this.columnHeader4.Width = 120;
             // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Фото";
+            this.columnHeader5.Width = 120;
+            // 
             // monthCal
             // 
             this.monthCal.Location = new System.Drawing.Point(12, 27);
@@ -254,32 +265,14 @@
             // 
             this.checkedListBoxUsers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkedListBoxUsers.CheckOnClick = true;
             this.checkedListBoxUsers.FormattingEnabled = true;
-            this.checkedListBoxUsers.Location = new System.Drawing.Point(12, 231);
+            this.checkedListBoxUsers.Location = new System.Drawing.Point(0, 24);
             this.checkedListBoxUsers.Name = "checkedListBoxUsers";
-            this.checkedListBoxUsers.Size = new System.Drawing.Size(163, 154);
+            this.checkedListBoxUsers.Size = new System.Drawing.Size(163, 64);
             this.checkedListBoxUsers.TabIndex = 8;
-            this.checkedListBoxUsers.Visible = false;
-            // 
-            // buttonAll
-            // 
-            this.buttonAll.Location = new System.Drawing.Point(12, 201);
-            this.buttonAll.Name = "buttonAll";
-            this.buttonAll.Size = new System.Drawing.Size(75, 23);
-            this.buttonAll.TabIndex = 9;
-            this.buttonAll.Text = "Все";
-            this.buttonAll.UseVisualStyleBackColor = true;
-            this.buttonAll.Visible = false;
-            // 
-            // buttonNone
-            // 
-            this.buttonNone.Location = new System.Drawing.Point(101, 201);
-            this.buttonNone.Name = "buttonNone";
-            this.buttonNone.Size = new System.Drawing.Size(75, 23);
-            this.buttonNone.TabIndex = 10;
-            this.buttonNone.Text = "Никого";
-            this.buttonNone.UseVisualStyleBackColor = true;
-            this.buttonNone.Visible = false;
+            this.checkedListBoxUsers.SelectedIndexChanged += new System.EventHandler(this.checkedListBoxUsers_SelectedIndexChanged);
+            this.checkedListBoxUsers.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.checkedListBoxUsers_MouseDoubleClick);
             // 
             // timerPing
             // 
@@ -287,19 +280,72 @@
             this.timerPing.Interval = 3000;
             this.timerPing.Tick += new System.EventHandler(this.timerPing_Tick);
             // 
-            // columnHeader5
+            // splitContainer1
             // 
-            this.columnHeader5.Text = "Фото";
-            this.columnHeader5.Width = 120;
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.splitContainer1.Location = new System.Drawing.Point(12, 201);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.checkedListBoxCP);
+            this.splitContainer1.Panel1.Controls.Add(this.checkBoxCP);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.checkBoxUsers);
+            this.splitContainer1.Panel2.Controls.Add(this.checkedListBoxUsers);
+            this.splitContainer1.Size = new System.Drawing.Size(163, 189);
+            this.splitContainer1.SplitterDistance = 94;
+            this.splitContainer1.TabIndex = 9;
+            // 
+            // checkBoxCP
+            // 
+            this.checkBoxCP.AutoSize = true;
+            this.checkBoxCP.Checked = true;
+            this.checkBoxCP.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxCP.Location = new System.Drawing.Point(4, 4);
+            this.checkBoxCP.Name = "checkBoxCP";
+            this.checkBoxCP.Size = new System.Drawing.Size(146, 17);
+            this.checkBoxCP.TabIndex = 9;
+            this.checkBoxCP.Text = "Все контрольные точки";
+            this.checkBoxCP.UseVisualStyleBackColor = true;
+            this.checkBoxCP.CheckedChanged += new System.EventHandler(this.checkBoxCP_CheckedChanged);
+            // 
+            // checkedListBoxCP
+            // 
+            this.checkedListBoxCP.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkedListBoxCP.CheckOnClick = true;
+            this.checkedListBoxCP.FormattingEnabled = true;
+            this.checkedListBoxCP.Location = new System.Drawing.Point(0, 27);
+            this.checkedListBoxCP.Name = "checkedListBoxCP";
+            this.checkedListBoxCP.Size = new System.Drawing.Size(163, 64);
+            this.checkedListBoxCP.TabIndex = 9;
+            this.checkedListBoxCP.SelectedIndexChanged += new System.EventHandler(this.checkedListBoxCP_SelectedIndexChanged);
+            this.checkedListBoxCP.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.checkedListBoxCP_MouseDoubleClick);
+            // 
+            // checkBoxUsers
+            // 
+            this.checkBoxUsers.AutoSize = true;
+            this.checkBoxUsers.Checked = true;
+            this.checkBoxUsers.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxUsers.Location = new System.Drawing.Point(4, 3);
+            this.checkBoxUsers.Name = "checkBoxUsers";
+            this.checkBoxUsers.Size = new System.Drawing.Size(119, 17);
+            this.checkBoxUsers.TabIndex = 10;
+            this.checkBoxUsers.Text = "Все пользователи";
+            this.checkBoxUsers.UseVisualStyleBackColor = true;
+            this.checkBoxUsers.CheckedChanged += new System.EventHandler(this.checkBoxUsers_CheckedChanged);
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
-            this.Controls.Add(this.buttonNone);
-            this.Controls.Add(this.buttonAll);
-            this.Controls.Add(this.checkedListBoxUsers);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.monthCal);
             this.Controls.Add(this.listViewLog);
             this.Controls.Add(this.statusStrip1);
@@ -318,6 +364,12 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -344,8 +396,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.CheckedListBox checkedListBoxUsers;
-        private System.Windows.Forms.Button buttonAll;
-        private System.Windows.Forms.Button buttonNone;
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.Timer timerPing;
@@ -353,6 +403,10 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem параметрыХранилищаToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.CheckedListBox checkedListBoxCP;
+        private System.Windows.Forms.CheckBox checkBoxCP;
+        private System.Windows.Forms.CheckBox checkBoxUsers;
     }
 }
 

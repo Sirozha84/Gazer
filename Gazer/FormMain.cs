@@ -72,10 +72,12 @@ namespace Gazer
             контрольныеТочкиToolStripMenuItem.Enabled = OK;
             параметрыХранилищаToolStripMenuItem.Enabled = OK;
             monthCal.Enabled = OK;
-            buttonAll.Enabled = OK;
-            buttonNone.Enabled = OK;
             checkedListBoxUsers.Enabled = OK;
             listViewLog.Enabled = OK;
+            checkBoxCP.Enabled = OK;
+            checkedListBoxCP.Enabled = OK;
+            checkBoxUsers.Enabled = OK;
+            checkedListBoxUsers.Enabled = OK;
         }
 
         private void пользователиToolStripMenuItem_Click(object sender, EventArgs e)
@@ -140,10 +142,29 @@ namespace Gazer
                 }
             }
             catch { }
+            RefrechCheckBoxes();
             DrawLog();
         }
 
         private void monthCal_DateSelected(object sender, DateRangeEventArgs e) { LoadLog(); }
+
+        /// <summary>
+        /// Обновляем список чеклистов
+        /// </summary>
+        void RefrechCheckBoxes()
+        {
+            checkBoxCP.Checked = true;
+            checkedListBoxCP.Items.Clear();
+            checkBoxUsers.Checked = true;
+            checkedListBoxUsers.Items.Clear();
+            foreach (Record rec in Log)
+            {
+                if (checkedListBoxCP.FindString(rec.CP) < 0)
+                    checkedListBoxCP.Items.Add(rec.CP);
+                if (checkedListBoxUsers.FindString(rec.Name) < 0)
+                    checkedListBoxUsers.Items.Add(rec.Name);
+            }
+        }
 
         /// <summary>
         /// Рисование журнала
@@ -154,7 +175,23 @@ namespace Gazer
             listViewLog.BeginUpdate();
             listViewLog.Items.Clear();
             foreach (Record rec in Log)
-                listViewLog.Items.Add(rec.Item());
+            {
+                bool yes1 = false;
+                if (checkBoxCP.Checked)
+                    yes1 = true;
+                else
+                    for (int i = 0; i < checkedListBoxCP.CheckedItems.Count; i++)
+                        if (rec.CP == checkedListBoxCP.CheckedItems[i].ToString())
+                            yes1 = true;
+                bool yes2 = false;
+                if (checkBoxUsers.Checked)
+                    yes2 = true;
+                else
+                    for (int i = 0; i < checkedListBoxUsers.CheckedItems.Count; i++)
+                        if (rec.Name == checkedListBoxUsers.CheckedItems[i].ToString())
+                            yes2 = true;
+                if (yes1 & yes2) listViewLog.Items.Add(rec.Item());
+            }
             listViewLog.EndUpdate();
         }
 
@@ -163,7 +200,7 @@ namespace Gazer
             bool ok = listViewLog.SelectedIndices.Count > 0;
             if (ok)
             {
-                Record rec = Log[listViewLog.SelectedIndices[0]];
+                Record rec = (Record)listViewLog.SelectedItems[0].Tag;
                 try
                 {
                     pictureBox.Image = Image.FromFile(rec.Photo);
@@ -180,5 +217,33 @@ namespace Gazer
         {
             Process.Start(Log[listViewLog.SelectedIndices[0]].Photo);
         }
+
+        private void checkBoxCP_CheckedChanged(object sender, EventArgs e) { MainCheck(checkBoxCP, checkedListBoxCP); }
+        private void checkedListBoxCP_SelectedIndexChanged(object sender, EventArgs e) { ListboxCheck(checkBoxCP, checkedListBoxCP); }
+        private void checkedListBoxCP_MouseDoubleClick(object sender, MouseEventArgs e) { ListboxCheck(checkBoxCP, checkedListBoxCP); }
+        private void checkBoxUsers_CheckedChanged(object sender, EventArgs e) { MainCheck(checkBoxUsers, checkedListBoxUsers); }
+        private void checkedListBoxUsers_SelectedIndexChanged(object sender, EventArgs e) { ListboxCheck(checkBoxUsers, checkedListBoxUsers); }
+        private void checkedListBoxUsers_MouseDoubleClick(object sender, MouseEventArgs e) { ListboxCheck(checkBoxUsers, checkedListBoxUsers); }
+
+        //Изменён главный чекбокс
+        void MainCheck(CheckBox box, CheckedListBox list)
+        {
+            if (box.Checked)
+                for (int i = 0; i < list.Items.Count; i++)
+                    list.SetItemChecked(i, false);
+            else
+                if (list.CheckedItems.Count == 0)
+                box.Checked = true;
+            DrawLog();
+        }
+
+        //Изменён чекбокс в списке
+        void ListboxCheck(CheckBox box, CheckedListBox list)
+        {
+            box.Checked = list.CheckedItems.Count == 0;
+            DrawLog();
+        }
+
+
     }
 }

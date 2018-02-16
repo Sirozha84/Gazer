@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Gazer
 {
@@ -29,7 +24,10 @@ namespace Gazer
             string ph = "";
             if (Photo != "") ph = "Есть";
             if (Photo == "Error") ph = "Ошибка";
-            return new ListViewItem(new string[] { Time, CP, Name, Res, ph });
+            ListViewItem item = new ListViewItem(new string[] { Time, CP, Name, Res, ph });
+            item.Tag = this;
+            Record rec = (Record)item.Tag;
+            return item;
         }
     }
 }
