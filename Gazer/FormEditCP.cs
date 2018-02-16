@@ -1,6 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
 
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.IO;
+using System.Threading;
+using System.Drawing;
+
+
 namespace Gazer
 {
     public partial class FormEditCP : Form
@@ -32,6 +40,7 @@ namespace Gazer
             textBoxIP.Enabled = checkBoxCam.Checked;
             textBoxLogin.Enabled = checkBoxCam.Checked;
             textBoxPassword.Enabled = checkBoxCam.Checked;
+            buttonTest.Enabled = checkBoxCam.Checked & textBoxIP.Text != "" & textBoxLogin.Text != "" & textBoxPassword.Text != "";
         }
 
         private void textBoxName_TextChanged(object sender, EventArgs e)
@@ -61,6 +70,36 @@ namespace Gazer
         {
             DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private void textBoxIP_TextChanged(object sender, EventArgs e) { RefreshCam(); }
+        private void textBoxLogin_TextChanged(object sender, EventArgs e) { RefreshCam(); }
+        private void textBoxPassword_TextChanged(object sender, EventArgs e) { RefreshCam(); }
+
+        private void buttonTest_Click(object sender, EventArgs e)
+        {
+            //Проверка камеры на доступность
+            try
+            {
+                //Запрос
+                string URL = "http://" + textBoxIP.Text + "/Streaming/channels/1/picture";
+                byte[] buffer = new byte[1000000];
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(URL);
+                req.Credentials = new NetworkCredential(textBoxLogin.Text, textBoxPassword.Text);
+                WebResponse resp = req.GetResponse();
+                Stream stream = resp.GetResponseStream();
+                int read, total = 0;
+                while ((read = stream.Read(buffer, total, 1000)) != 0) { total += read; }
+                Bitmap bmp = (Bitmap)Bitmap.FromStream(new MemoryStream(buffer, 0, total));
+                MessageBox.Show("Проверка прошла успешно.", "Проверка камеры",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка при получении снимка.", "Проверка камеры",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
     }
 }
