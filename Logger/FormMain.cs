@@ -11,19 +11,29 @@ namespace Logger
         string Key;
         int SymCount;
         int SymCountLast;
-        const string TextWait = "Приложите ключ к считывателю";
         UserActivityHook actHook;
-        bool ask = false;
+        bool lastPing;
 
         public FormMain()
         {
             InitializeComponent();
-            labelKey.Text = TextWait;
             Properties.Settings.Default.Name = Properties.Settings.Default.Name;
             Properties.Settings.Default.Server = Properties.Settings.Default.Server;
             Properties.Settings.Default.Port = Properties.Settings.Default.Port;
-            Properties.Settings.Default.Save();
+            Properties.Settings.Default.Save(); //Потом, после того как будет интерфейс настроек - убрать
+            lastPing = Ping();
+            textBoxLog.Text = "Вас приветствует система контроля доступа Gazer!" + Environment.NewLine;
+            Log("Подключение...", "");
+            if (lastPing)
+            {
+                Log("Сервер доступен, система готова к работе.", "");
+                textBoxLog.AppendText("Пожалуйста, поднесите ключ к считывателю." + Environment.NewLine);
 
+            }
+            else
+            {
+                Log("Сервер не доступен, ожидаю подключения...", "");
+            }
             //Запускаем хук на отлов клавиатуры
             actHook = new UserActivityHook(); 
             actHook.KeyDown += new KeyEventHandler(MyKeyDown);
@@ -31,7 +41,15 @@ namespace Logger
 
         private void timerPing_Tick(object sender, EventArgs e)
         {
-            SetStatus(Ping());
+            bool ping = Ping();
+            SetStatus(ping);
+            if (ping != lastPing)
+            {
+                if (ping) Log("Связь восстановлена", "");
+                else Log("Связь потеряна", "");
+                lastPing = ping;
+            }
+            //actHook.Start();
         }
 
         bool Ping()
@@ -54,16 +72,13 @@ namespace Logger
                     }
                 }
             }
-            catch (Exception e)
-            {
-                return false;
-            }
+            catch { return false; }
         }
 
         void SetStatus(bool OK)
         {
-            labelStatus.Text = "Статус: " + (OK ? "OK" : "Ошибка соединения с сервером");
-            labelStatus.ForeColor = (OK ? Color.Black : Color.Tomato);
+            labelStatus.Text = "Статус: " + (OK ? "OK   поднесите ключ" : "Ошибка соединения с сервером");
+            labelStatus.ForeColor = (OK ? Color.White : Color.Tomato);
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -73,98 +88,115 @@ namespace Logger
 
         private void MyKeyDown(object sender, KeyEventArgs e)
         {
-            //labelStatus.Text = e.KeyValue.ToString();
             Key += e.KeyValue.ToString();
             SymCount++;
             if (SymCount >= Properties.Settings.Default.KeyBytes)
             {
-                if (!ask)
+                actHook.Stop();
+                try
                 {
-                    ask = true;
-                    try
+                    using (TcpClient client = new TcpClient())
                     {
-                        using (TcpClient client = new TcpClient())
+                        //client.ReceiveTimeout = 5000;
+                        client.Connect(Properties.Settings.Default.Server, Properties.Settings.Default.Port);
+                        using (NetworkStream stream = client.GetStream())
                         {
-                            //client.ReceiveTimeout = 5000;
-                            client.Connect(Properties.Settings.Default.Server, Properties.Settings.Default.Port);
-                            using (NetworkStream stream = client.GetStream())
+                            Console.WriteLine(client.Connected);
+                            BinaryWriter writer = new BinaryWriter(stream);
+                            BinaryReader reader = new BinaryReader(stream);
+                            //Посылаем сообщение
+                            writer.Write("Check");
+                            writer.Write(Properties.Settings.Default.Name);
+                            writer.Write(Key);
+                            //Читаем ответ от сервера
+                            string Answer = reader.ReadString();
+                            if (Answer == "OK") OKMessage();
+                            if (Answer == "CPNotfound") Error("Контрольная точка не зарегистрирована", Properties.Settings.Default.Name);
+                            if (Answer == "UserNotfound") Error("Ключ не зарегистрирован", Key);
+                            if (Answer == "Result")
                             {
-                                Console.WriteLine(client.Connected);
-                                BinaryWriter writer = new BinaryWriter(stream);
-                                BinaryReader reader = new BinaryReader(stream);
-                                //Посылаем сообщение
-                                writer.Write("Check");
-                                writer.Write(Properties.Settings.Default.Name);
-                                writer.Write(Key);
-                                //Читаем ответ от сервера
-                                string Answer = reader.ReadString();
-                                if (Answer == "OK") Message("Спасибо за визит!");
-                                if (Answer == "CPNotfound") Error("Контрольная точка не зарегистрирована");
-                                if (Answer == "UserNotfound") Error("Ключ не зарегистрирован");
-                                if (Answer == "Result")
-                                {
-                                    labelKey.Text = "";
-                                    FormResult form = new FormResult();
-                                    form.ShowDialog();
-                                    writer.Write(form.Result);
-                                    if (reader.ReadString() == "OK")
-                                        Message("Спасибо за визит!");
-                                    form.Dispose(); //На всякий случай
-                                }
+                                FormResult form = new FormResult();
+                                form.TopMost = true;
+                                form.ShowDialog();
+                                writer.Write(form.Result);
+                                if (reader.ReadString() == "OK")
+                                    OKMessage();
+                                form.Dispose(); //На всякий случай
                             }
                         }
                     }
-                    catch
-                    {
-                        Error("Ошибка связи");
-                    }
-                    ask = false;
                 }
-                KeyReset();
+                catch
+                {
+                    Error("Ошибка связи", "");
+                }
+                actHook.Start();
             }
         }
 
         //Таймер для обнуления ключа, если он был введён не полностью
         private void timer2_Tick(object sender, EventArgs e)
         {
-            if (SymCount > 0 && SymCount == SymCountLast) KeyReset();
+            if (SymCount > 0 && SymCount == SymCountLast)
+            {
+                SymCount = 0;
+                Key = "";
+            }
             SymCountLast = SymCount;
         }
 
-        void KeyReset()
+        /// <summary>
+        /// Хорошее сообщение
+        /// </summary>
+        void OKMessage()
         {
-            SymCount = 0;
-            Key = "";
-            //Почему-то если не делать перезапуск, ломается после 11-го окна с вопросом :-\
-            actHook.Stop();
-            actHook.Start();
+            Log("Удачно", "");
+            FormMessage form = new FormMessage("Спасибо за визит!", false);
+            form.TopMost = true;
+            form.ShowDialog();
         }
 
-        void Message(string msg)
+        /// <summary>
+        /// Сообщение об ошибке
+        /// </summary>
+        /// <param name="msg"></param>
+        void Error(string msg, string des)
         {
-            labelKey.Text = msg;
-            labelKey.ForeColor = Color.White;
-            timerMessage.Enabled = true;
+            if (des == "")
+                Log(msg, "");
+            else
+                Log(msg, " (" + des + ")");
+            FormMessage form = new FormMessage(msg, true);
+            form.TopMost = true;
+            form.ShowDialog();
         }
 
-        void Error(string msg)
+        /// <summary>
+        /// Запись лога + вывод на экран
+        /// </summary>
+        /// <param name="msg"></param>
+        void Log(string msg, string des)
         {
-            labelKey.Text = msg;
-            labelKey.ForeColor = Color.Tomato;
-            timerMessage.Enabled = true;
-        }
-
-        private void timerMessage_Tick(object sender, EventArgs e)
-        {
-            labelKey.Text = TextWait;
-            labelKey.ForeColor = Color.Black;
-            timerMessage.Enabled = false;
+            textBoxLog.AppendText(DateTime.Now.ToString("HH:mm ") + msg + Environment.NewLine);
+            textBoxLog.SelectionStart = textBoxLog.TextLength;
+            textBoxLog.ScrollToCaret();
+            try
+            {
+                StreamWriter file = File.AppendText("Log.txt");
+                file.WriteLine(DateTime.Now.ToString("yyyy.MM.dd HH:mm - " + msg + des));
+                file.Close();
+            }
+            catch { }
         }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             //Закрываем хук при выходе, шоп комп не помер
             actHook.Stop();
+        }
+
+        private void timerKeyCheck_Tick(object sender, EventArgs e)
+        {
         }
     }
 }

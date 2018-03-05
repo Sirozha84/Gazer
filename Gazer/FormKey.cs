@@ -13,7 +13,7 @@ namespace Gazer
             InitializeComponent();
         }
 
-        private void buttonCancel_KeyDown(object sender, KeyEventArgs e)
+        private void FormKey_KeyDown(object sender, KeyEventArgs e)
         {
             s++;
             Key += e.KeyValue.ToString();
@@ -22,12 +22,7 @@ namespace Gazer
                 DialogResult = DialogResult.OK;
                 Close();
             }
-        }
-
-        private void buttonCancel_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            Close();
+            //label1.Text = s.ToString();
         }
     }
 }

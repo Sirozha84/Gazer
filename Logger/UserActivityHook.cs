@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
-using System.Threading;
 using System.Windows.Forms;
 using System.ComponentModel;
 
@@ -440,15 +439,14 @@ namespace Logger
         /// <summary>
         /// Creates an instance of UserActivityHook object and installs both or one of mouse and/or keyboard hooks and starts rasing events
         /// </summary>
-        /// <param name="InstallMouseHook"><b>true</b> if mouse events must be monitored</param>
         /// <param name="InstallKeyboardHook"><b>true</b> if keyboard events must be monitored</param>
         /// <exception cref="Win32Exception">Any windows problem.</exception>
         /// <remarks>
         /// To create an instance without installing hooks call new UserActivityHook(false, false)
         /// </remarks>
-        public UserActivityHook(bool InstallMouseHook, bool InstallKeyboardHook)
+        public UserActivityHook(bool InstallKeyboardHook)
         {
-            Start(InstallMouseHook, InstallKeyboardHook);
+            Start(InstallKeyboardHook);
         }
 
         /// <summary>
@@ -457,13 +455,9 @@ namespace Logger
         ~UserActivityHook()
         {
             //uninstall hooks and do not throw exceptions
-            Stop(true, true, false);
+            Stop(false);
         }
 
-        /// <summary>
-        /// Occurs when the user moves the mouse, presses any mouse button or scrolls the wheel
-        /// </summary>
-        public event MouseEventHandler OnMouseActivity;
         /// <summary>
         /// Occurs when the user presses a key
         /// </summary>
@@ -479,19 +473,11 @@ namespace Logger
 
 
         /// <summary>
-        /// Stores the handle to the mouse hook procedure.
-        /// </summary>
-        private int hMouseHook = 0;
-        /// <summary>
         /// Stores the handle to the keyboard hook procedure.
         /// </summary>
         private int hKeyboardHook = 0;
 
 
-        /// <summary>
-        /// Declare MouseHookProcedure as HookProc type.
-        /// </summary>
-        private static HookProc MouseHookProcedure;
         /// <summary>
         /// Declare KeyboardHookProcedure as HookProc type.
         /// </summary>
@@ -504,41 +490,16 @@ namespace Logger
         /// <exception cref="Win32Exception">Any windows problem.</exception>
         public void Start()
         {
-            this.Start(true, true);
+            this.Start(true);
         }
 
         /// <summary>
         /// Installs both or one of mouse and/or keyboard hooks and starts rasing events
         /// </summary>
-        /// <param name="InstallMouseHook"><b>true</b> if mouse events must be monitored</param>
         /// <param name="InstallKeyboardHook"><b>true</b> if keyboard events must be monitored</param>
         /// <exception cref="Win32Exception">Any windows problem.</exception>
-        public void Start(bool InstallMouseHook, bool InstallKeyboardHook)
+        public void Start(bool InstallKeyboardHook)
         {
-            // install Mouse hook only if it is not installed and must be installed
-            if (hMouseHook == 0 && InstallMouseHook)
-            {
-                // Create an instance of HookProc.
-                MouseHookProcedure = new HookProc(MouseHookProc);
-                //install hook
-                hMouseHook = SetWindowsHookEx(
-                    WH_MOUSE_LL,
-                    MouseHookProcedure,
-                    Marshal.GetHINSTANCE(
-                        Assembly.GetExecutingAssembly().GetModules()[0]),
-                    0);
-                //If SetWindowsHookEx fails.
-                if (hMouseHook == 0)
-                {
-                    //Returns the error code returned by the last unmanaged function called using platform invoke that has the DllImportAttribute.SetLastError flag set. 
-                    int errorCode = Marshal.GetLastWin32Error();
-                    //do cleanup
-                    Stop(true, false, false);
-                    //Initializes and throws a new instance of the Win32Exception class with the specified error. 
-                    throw new Win32Exception(errorCode);
-                }
-            }
-
             // install Keyboard hook only if it is not installed and must be installed
             if (hKeyboardHook == 0 && InstallKeyboardHook)
             {
@@ -557,7 +518,7 @@ namespace Logger
                     //Returns the error code returned by the last unmanaged function called using platform invoke that has the DllImportAttribute.SetLastError flag set. 
                     int errorCode = Marshal.GetLastWin32Error();
                     //do cleanup
-                    Stop(false, true, false);
+                    Stop(false);
                     //Initializes and throws a new instance of the Win32Exception class with the specified error. 
                     throw new Win32Exception(errorCode);
                 }
@@ -570,37 +531,19 @@ namespace Logger
         /// <exception cref="Win32Exception">Any windows problem.</exception>
         public void Stop()
         {
-            this.Stop(true, true, true);
+            this.Stop(true);
         }
 
         /// <summary>
         /// Stops monitoring both or one of mouse and/or keyboard events and rasing events.
         /// </summary>
-        /// <param name="UninstallMouseHook"><b>true</b> if mouse hook must be uninstalled</param>
         /// <param name="UninstallKeyboardHook"><b>true</b> if keyboard hook must be uninstalled</param>
         /// <param name="ThrowExceptions"><b>true</b> if exceptions which occured during uninstalling must be thrown</param>
         /// <exception cref="Win32Exception">Any windows problem.</exception>
-        public void Stop(bool UninstallMouseHook, bool UninstallKeyboardHook, bool ThrowExceptions)
+        public void Stop(bool ThrowExceptions)
         {
-            //if mouse hook set and must be uninstalled
-            if (hMouseHook != 0 && UninstallMouseHook)
-            {
-                //uninstall hook
-                int retMouse = UnhookWindowsHookEx(hMouseHook);
-                //reset invalid handle
-                hMouseHook = 0;
-                //if failed and exception must be thrown
-                if (retMouse == 0 && ThrowExceptions)
-                {
-                    //Returns the error code returned by the last unmanaged function called using platform invoke that has the DllImportAttribute.SetLastError flag set. 
-                    int errorCode = Marshal.GetLastWin32Error();
-                    //Initializes and throws a new instance of the Win32Exception class with the specified error. 
-                    throw new Win32Exception(errorCode);
-                }
-            }
-
             //if keyboard hook set and must be uninstalled
-            if (hKeyboardHook != 0 && UninstallKeyboardHook)
+            if (hKeyboardHook != 0)
             {
                 //uninstall hook
                 int retKeyboard = UnhookWindowsHookEx(hKeyboardHook);
@@ -617,86 +560,6 @@ namespace Logger
             }
         }
 
-
-        /// <summary>
-        /// A callback function which will be called every time a mouse activity detected.
-        /// </summary>
-        /// <param name="nCode">
-        /// [in] Specifies whether the hook procedure must process the message. 
-        /// If nCode is HC_ACTION, the hook procedure must process the message. 
-        /// If nCode is less than zero, the hook procedure must pass the message to the 
-        /// CallNextHookEx function without further processing and must return the 
-        /// value returned by CallNextHookEx.
-        /// </param>
-        /// <param name="wParam">
-        /// [in] Specifies whether the message was sent by the current thread. 
-        /// If the message was sent by the current thread, it is nonzero; otherwise, it is zero. 
-        /// </param>
-        /// <param name="lParam">
-        /// [in] Pointer to a CWPSTRUCT structure that contains details about the message. 
-        /// </param>
-        /// <returns>
-        /// If nCode is less than zero, the hook procedure must return the value returned by CallNextHookEx. 
-        /// If nCode is greater than or equal to zero, it is highly recommended that you call CallNextHookEx 
-        /// and return the value it returns; otherwise, other applications that have installed WH_CALLWNDPROC 
-        /// hooks will not receive hook notifications and may behave incorrectly as a result. If the hook 
-        /// procedure does not call CallNextHookEx, the return value should be zero. 
-        /// </returns>
-        private int MouseHookProc(int nCode, int wParam, IntPtr lParam)
-        {
-            // if ok and someone listens to our events
-            if ((nCode >= 0) && (OnMouseActivity != null))
-            {
-                //Marshall the data from callback.
-                MouseLLHookStruct mouseHookStruct = (MouseLLHookStruct)Marshal.PtrToStructure(lParam, typeof(MouseLLHookStruct));
-
-                //detect button clicked
-                MouseButtons button = MouseButtons.None;
-                short mouseDelta = 0;
-                switch (wParam)
-                {
-                    case WM_LBUTTONDOWN:
-                        //case WM_LBUTTONUP: 
-                        //case WM_LBUTTONDBLCLK: 
-                        button = MouseButtons.Left;
-                        break;
-                    case WM_RBUTTONDOWN:
-                        //case WM_RBUTTONUP: 
-                        //case WM_RBUTTONDBLCLK: 
-                        button = MouseButtons.Right;
-                        break;
-                    case WM_MOUSEWHEEL:
-                        //If the message is WM_MOUSEWHEEL, the high-order word of mouseData member is the wheel delta. 
-                        //One wheel click is defined as WHEEL_DELTA, which is 120. 
-                        //(value >> 16) & 0xffff; retrieves the high-order word from the given 32-bit value
-                        mouseDelta = (short)((mouseHookStruct.mouseData >> 16) & 0xffff);
-                        //TODO: X BUTTONS (I havent them so was unable to test)
-                        //If the message is WM_XBUTTONDOWN, WM_XBUTTONUP, WM_XBUTTONDBLCLK, WM_NCXBUTTONDOWN, WM_NCXBUTTONUP, 
-                        //or WM_NCXBUTTONDBLCLK, the high-order word specifies which X button was pressed or released, 
-                        //and the low-order word is reserved. This value can be one or more of the following values. 
-                        //Otherwise, mouseData is not used. 
-                        break;
-                }
-
-                //double clicks
-                int clickCount = 0;
-                if (button != MouseButtons.None)
-                    if (wParam == WM_LBUTTONDBLCLK || wParam == WM_RBUTTONDBLCLK) clickCount = 2;
-                    else clickCount = 1;
-
-                //generate event 
-                 MouseEventArgs e = new MouseEventArgs(
-                                                    button,
-                                                    clickCount,
-                                                    mouseHookStruct.pt.x,
-                                                    mouseHookStruct.pt.y,
-                                                    mouseDelta);
-                //raise it
-                OnMouseActivity(this, e);
-            }
-            //call next hook
-            return CallNextHookEx(hMouseHook, nCode, wParam, lParam);
-        }
 
         /// <summary>
         /// A callback function which will be called every time a keyboard activity detected.

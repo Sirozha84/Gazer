@@ -61,7 +61,7 @@ namespace Logger.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("11")]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
         public int KeyBytes {
             get {
                 return ((int)(this["KeyBytes"]));

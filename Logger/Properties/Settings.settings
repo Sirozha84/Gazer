@@ -12,7 +12,7 @@
       <Value Profile="(Default)">8081</Value>
     </Setting>
     <Setting Name="KeyBytes" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">11</Value>
+      <Value Profile="(Default)">14</Value>
     </Setting>
   </Settings>
 </SettingsFile>
