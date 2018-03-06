@@ -213,9 +213,28 @@ namespace Gazer
             labelNotImage.Visible = !ok;
         }
 
+        //Открывание картинки разными способами
         private void pictureBox_Click(object sender, EventArgs e)
         {
-            Process.Start(Log[listViewLog.SelectedIndices[0]].Photo);
+            OpenPhoto(Log[listViewLog.SelectedIndices[0]].Photo);
+        }
+
+        private void listViewLog_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (Log[listViewLog.SelectedIndices[0]].Photo != "")
+                OpenPhoto(Log[listViewLog.SelectedIndices[0]].Photo);
+        }
+
+        void OpenPhoto(string file)
+        {
+            try
+            {
+                Process.Start(file);
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка при открытии снимка", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void checkBoxCP_CheckedChanged(object sender, EventArgs e) { MainCheck(checkBoxCP, checkedListBoxCP); }
@@ -243,7 +262,5 @@ namespace Gazer
             box.Checked = list.CheckedItems.Count == 0;
             DrawLog();
         }
-
-
     }
 }

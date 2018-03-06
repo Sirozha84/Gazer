@@ -55,6 +55,7 @@
             this.labelStatus.TabIndex = 1;
             this.labelStatus.Text = "Статус";
             this.labelStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelStatus.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.labelStatus_MouseDoubleClick);
             // 
             // timerKeyReset
             // 

@@ -35,7 +35,7 @@ namespace Logger
                 Log("Сервер не доступен, ожидаю подключения...", "");
             }
             //Запускаем хук на отлов клавиатуры
-            actHook = new UserActivityHook(); 
+            actHook = new UserActivityHook();
             actHook.KeyDown += new KeyEventHandler(MyKeyDown);
         }
 
@@ -45,11 +45,14 @@ namespace Logger
             SetStatus(ping);
             if (ping != lastPing)
             {
-                if (ping) Log("Связь восстановлена", "");
+                if (ping)
+                {
+                    Log("Связь восстановлена", "");
+                    HookRestart();
+                }
                 else Log("Связь потеряна", "");
                 lastPing = ping;
             }
-            //actHook.Start();
         }
 
         bool Ping()
@@ -90,7 +93,11 @@ namespace Logger
         {
             Key += e.KeyValue.ToString();
             SymCount++;
-            if (SymCount >= Properties.Settings.Default.KeyBytes)
+#if DEBUG
+            if (SymCount == Properties.Settings.Default.KeyBytes)
+#else
+            if (SymCount == Properties.Settings.Default.KeyBytes && e.KeyValue == 13)
+#endif
             {
                 actHook.Stop();
                 try
@@ -132,16 +139,22 @@ namespace Logger
                 }
                 actHook.Start();
             }
+            if (SymCount > Properties.Settings.Default.KeyBytes) KeyReset();
+        }
+
+        /// <summary>
+        /// Сброс набранного кода ключа
+        /// </summary>
+        void KeyReset()
+        {
+            SymCount = 0;
+            Key = "";
         }
 
         //Таймер для обнуления ключа, если он был введён не полностью
         private void timer2_Tick(object sender, EventArgs e)
         {
-            if (SymCount > 0 && SymCount == SymCountLast)
-            {
-                SymCount = 0;
-                Key = "";
-            }
+            if (SymCount > 0 && SymCount == SymCountLast) KeyReset();
             SymCountLast = SymCount;
         }
 
@@ -191,12 +204,29 @@ namespace Logger
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+#if !DEBUG
+            MessageBox.Show("Вам запращенно закрывать эту программу!");
+            e.Cancel = true;
+            return;
+#endif
             //Закрываем хук при выходе, шоп комп не помер
             actHook.Stop();
         }
 
-        private void timerKeyCheck_Tick(object sender, EventArgs e)
+        void HookRestart()
         {
+            try
+            {
+                actHook.Stop();
+            }
+            catch { }
+            actHook.Start();
+        }
+
+        private void labelStatus_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            FormProperties form = new FormProperties();
+            form.ShowDialog();
         }
     }
 }

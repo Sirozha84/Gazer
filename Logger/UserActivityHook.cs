@@ -560,7 +560,6 @@ namespace Logger
             }
         }
 
-
         /// <summary>
         /// A callback function which will be called every time a keyboard activity detected.
         /// </summary>

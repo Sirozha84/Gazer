@@ -61,6 +61,12 @@
     <Compile Include="FormMessage.Designer.cs">
       <DependentUpon>FormMessage.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormProperties.Designer.cs">
+      <DependentUpon>FormProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormResult.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,6 +81,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMessage.resx">
       <DependentUpon>FormMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormProperties.resx">
+      <DependentUpon>FormProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormResult.resx">
       <DependentUpon>FormResult.cs</DependentUpon>

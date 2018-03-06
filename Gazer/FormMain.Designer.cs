@@ -57,8 +57,8 @@
             this.checkedListBoxUsers = new System.Windows.Forms.CheckedListBox();
             this.timerPing = new System.Windows.Forms.Timer(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.checkBoxCP = new System.Windows.Forms.CheckBox();
             this.checkedListBoxCP = new System.Windows.Forms.CheckedListBox();
+            this.checkBoxCP = new System.Windows.Forms.CheckBox();
             this.checkBoxUsers = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -205,6 +205,7 @@
             this.listViewLog.UseCompatibleStateImageBehavior = false;
             this.listViewLog.View = System.Windows.Forms.View.Details;
             this.listViewLog.SelectedIndexChanged += new System.EventHandler(this.listViewLog_SelectedIndexChanged);
+            this.listViewLog.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listViewLog_MouseDoubleClick);
             // 
             // columnHeader1
             // 
@@ -301,19 +302,6 @@
             this.splitContainer1.SplitterDistance = 94;
             this.splitContainer1.TabIndex = 9;
             // 
-            // checkBoxCP
-            // 
-            this.checkBoxCP.AutoSize = true;
-            this.checkBoxCP.Checked = true;
-            this.checkBoxCP.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxCP.Location = new System.Drawing.Point(4, 4);
-            this.checkBoxCP.Name = "checkBoxCP";
-            this.checkBoxCP.Size = new System.Drawing.Size(146, 17);
-            this.checkBoxCP.TabIndex = 9;
-            this.checkBoxCP.Text = "Все контрольные точки";
-            this.checkBoxCP.UseVisualStyleBackColor = true;
-            this.checkBoxCP.CheckedChanged += new System.EventHandler(this.checkBoxCP_CheckedChanged);
-            // 
             // checkedListBoxCP
             // 
             this.checkedListBoxCP.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -326,6 +314,19 @@
             this.checkedListBoxCP.TabIndex = 9;
             this.checkedListBoxCP.SelectedIndexChanged += new System.EventHandler(this.checkedListBoxCP_SelectedIndexChanged);
             this.checkedListBoxCP.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.checkedListBoxCP_MouseDoubleClick);
+            // 
+            // checkBoxCP
+            // 
+            this.checkBoxCP.AutoSize = true;
+            this.checkBoxCP.Checked = true;
+            this.checkBoxCP.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxCP.Location = new System.Drawing.Point(4, 4);
+            this.checkBoxCP.Name = "checkBoxCP";
+            this.checkBoxCP.Size = new System.Drawing.Size(146, 17);
+            this.checkBoxCP.TabIndex = 9;
+            this.checkBoxCP.Text = "Все контрольные точки";
+            this.checkBoxCP.UseVisualStyleBackColor = true;
+            this.checkBoxCP.CheckedChanged += new System.EventHandler(this.checkBoxCP_CheckedChanged);
             // 
             // checkBoxUsers
             // 
