@@ -4,20 +4,24 @@ using System.Net.Sockets;
 using System.IO;
 using System.Threading;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace Server
 {
     class Program
     {
+        static int Minutes;
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Gazer Server     Версия 1.2 (06.03.2018)\n");
+            Console.WriteLine("Gazer Server     Версия 1.3 (20.03.2018)\n");
             
             //Загрузка списка данных из файлов
             Data.LoadUsers();
             Data.LoadCP();
-            Data.LoadDir();
-
+            Data.LoadProperties();
+            Timer timerTest = new Timer(TimeOut, null, 0, 60000); //Релиз - минута как минута
+            //Timer timerTest = new Timer(TimeOut, null, 0, 1000); //Тестово - минута как секунда
             //Запуск сервера
             TcpListener server = new TcpListener(IPAddress.Any, 8081);
             server.Start();
@@ -89,25 +93,38 @@ namespace Server
                                                             reader.ReadString(), reader.ReadString(), reader.ReadString()));
                     Data.SaveCP();
                 }
-                if (Request == "ReadDir")
+                if (Request == "ReadProperties")
                 {
                     writer.Write(Data.Dir);
+                    writer.Write(Data.Minutes);
+                    writer.Write(Data.Command);
                 }
-                if (Request == "WriteDir")
+                if (Request == "WriteProperties")
                 {
                     Data.Dir = reader.ReadString();
-                    Data.SaveDir();
+                    Data.Minutes = reader.ReadString();
+                    Data.Command = reader.ReadString();
+                    Data.SaveProperties();
+                    Minutes = 0;
                 }
                 //Отметка сотрудника
                 if (Request == "Check")
                 {
                     //Проверяем кто к нам и откуда ломится
-                    string s = reader.ReadString();
-                    CheckPoint cp = Data.CheckPoints.Find(o => o.Name == s);
-                    s = reader.ReadString();
-                    User user = Data.Users.Find(o => o.Key == s);
-                    if (cp == null) writer.Write("CPNotfound");
-                    else if (user == null) writer.Write("UserNotfound");
+                    string c = reader.ReadString();
+                    CheckPoint cp = Data.CheckPoints.Find(o => o.Name == c);
+                    string u = reader.ReadString();
+                    User user = Data.Users.Find(o => o.Key == u);
+                    if (cp == null)
+                    {
+                        writer.Write("CPNotfound");
+                        Log("Контрольная точка не зарегистрирована (" + c + ")");
+                    }
+                    else if (user == null)
+                    {
+                        writer.Write("UserNotfound");
+                        Log("Ключ не зарегистрирован (" + u + ")");
+                    }
                     else
                     {
                         //Пользователь опознан, спрашиваем дополнительные сведения
@@ -124,6 +141,7 @@ namespace Server
                             Check(cp, user, "OK");
                         }
                     }
+                    Minutes = 0;
                 }
                 //Запрос журнала
                 if (Request == "ReadLog")
@@ -143,6 +161,19 @@ namespace Server
                         }
                     }
                     catch { }
+                }
+                //Тест внешней команды
+                if (Request == "TestCommand")
+                {
+                    try
+                    {
+                        Process.Start(reader.ReadString());
+                        writer.Write("OK");
+                    }
+                    catch
+                    {
+                        writer.Write("Error");
+                    }
                 }
             }
         }
@@ -209,6 +240,23 @@ namespace Server
                 file.WriteLine(rec);
         }
 
-        
+        static void TimeOut(object o)
+        {
+            Minutes++;
+            //Log("таймер " + Minutes.ToString());
+            if (Minutes >= Convert.ToInt32(Data.Minutes) && Convert.ToInt32(Data.Minutes) > 0)
+            {
+                try
+                {
+                    Process.Start(Data.Command);
+                    Log("Зафиксировано бездействие дольше разрешённого, выполнена внешняя команда");
+                }
+                catch
+                {
+                    Log("Зафиксировано бездействие дольше разрешённого, но произошла ошибка при выполнении внешней команды");
+                }
+                Minutes = 0;
+            }
+        }
     }
 }

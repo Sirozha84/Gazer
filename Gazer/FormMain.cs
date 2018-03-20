@@ -37,7 +37,7 @@ namespace Gazer
 
         private void параметрыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormProperties form = new FormProperties();
+            FormPropertiesConnection form = new FormPropertiesConnection();
             form.ShowDialog();
         }
 
@@ -70,7 +70,7 @@ namespace Gazer
             toolStripStatusLabelStatus.Text = "Статус: " + (OK ? "OK" : "Ошибка соединения с сервером");
             пользователиToolStripMenuItem.Enabled = OK;
             контрольныеТочкиToolStripMenuItem.Enabled = OK;
-            параметрыХранилищаToolStripMenuItem.Enabled = OK;
+            параметрыСистемыToolStripMenuItem.Enabled = OK;
             monthCal.Enabled = OK;
             checkedListBoxUsers.Enabled = OK;
             listViewLog.Enabled = OK;
@@ -94,7 +94,7 @@ namespace Gazer
 
         private void параметрыХранилищаToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormDir form = new FormDir();
+            FormPropertiesSystem form = new FormPropertiesSystem();
             form.ShowDialog();
         }
 

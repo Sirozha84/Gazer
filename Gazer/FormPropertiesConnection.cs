@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Gazer
 {
-    public partial class FormProperties : Form
+    public partial class FormPropertiesConnection : Form
     {
-        public FormProperties()
+        public FormPropertiesConnection()
         {
             InitializeComponent();
         }

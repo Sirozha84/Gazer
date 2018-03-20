@@ -37,8 +37,8 @@
             this.пользователиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.контрольныеТочкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.параметрыХранилищаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.параметрыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.параметрыСистемыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.параметрыПодключенияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -102,8 +102,8 @@
             this.пользователиToolStripMenuItem,
             this.контрольныеТочкиToolStripMenuItem,
             this.toolStripMenuItem2,
-            this.параметрыХранилищаToolStripMenuItem,
-            this.параметрыToolStripMenuItem});
+            this.параметрыСистемыToolStripMenuItem,
+            this.параметрыПодключенияToolStripMenuItem});
             this.сервисToolStripMenuItem.Name = "сервисToolStripMenuItem";
             this.сервисToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.сервисToolStripMenuItem.Text = "Сервис";
@@ -127,19 +127,19 @@
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(214, 6);
             // 
-            // параметрыХранилищаToolStripMenuItem
+            // параметрыСистемыToolStripMenuItem
             // 
-            this.параметрыХранилищаToolStripMenuItem.Name = "параметрыХранилищаToolStripMenuItem";
-            this.параметрыХранилищаToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
-            this.параметрыХранилищаToolStripMenuItem.Text = "Хранилище снимков";
-            this.параметрыХранилищаToolStripMenuItem.Click += new System.EventHandler(this.параметрыХранилищаToolStripMenuItem_Click);
+            this.параметрыСистемыToolStripMenuItem.Name = "параметрыСистемыToolStripMenuItem";
+            this.параметрыСистемыToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.параметрыСистемыToolStripMenuItem.Text = "Параметры системы";
+            this.параметрыСистемыToolStripMenuItem.Click += new System.EventHandler(this.параметрыХранилищаToolStripMenuItem_Click);
             // 
-            // параметрыToolStripMenuItem
+            // параметрыПодключенияToolStripMenuItem
             // 
-            this.параметрыToolStripMenuItem.Name = "параметрыToolStripMenuItem";
-            this.параметрыToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
-            this.параметрыToolStripMenuItem.Text = "Параметры подключения";
-            this.параметрыToolStripMenuItem.Click += new System.EventHandler(this.параметрыToolStripMenuItem_Click);
+            this.параметрыПодключенияToolStripMenuItem.Name = "параметрыПодключенияToolStripMenuItem";
+            this.параметрыПодключенияToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.параметрыПодключенияToolStripMenuItem.Text = "Параметры подключения";
+            this.параметрыПодключенияToolStripMenuItem.Click += new System.EventHandler(this.параметрыToolStripMenuItem_Click);
             // 
             // справкаToolStripMenuItem
             // 
@@ -278,7 +278,7 @@
             // timerPing
             // 
             this.timerPing.Enabled = true;
-            this.timerPing.Interval = 3000;
+            this.timerPing.Interval = 5000;
             this.timerPing.Tick += new System.EventHandler(this.timerPing_Tick);
             // 
             // splitContainer1
@@ -385,7 +385,7 @@
         private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem сервисToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem пользователиToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem параметрыToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem параметрыПодключенияToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelStatus;
         private System.Windows.Forms.ListView listViewLog;
@@ -402,7 +402,7 @@
         private System.Windows.Forms.Timer timerPing;
         private System.Windows.Forms.ToolStripMenuItem контрольныеТочкиToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem параметрыХранилищаToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem параметрыСистемыToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.CheckedListBox checkedListBoxCP;

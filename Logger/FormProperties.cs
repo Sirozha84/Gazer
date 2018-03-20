@@ -19,11 +19,16 @@ namespace Logger
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.Server != textBoxServer.Text)
-                MessageBox.Show("Адрес сервера изменился,\nдля принятия настроек перезапустите клиент.");
             Properties.Settings.Default.Server = textBoxServer.Text;
             Properties.Settings.Default.Name = textBoxName.Text;
             Properties.Settings.Default.Save();
+            Close();
+        }
+
+        private void buttonQuit_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+            //Application.Exit();
         }
     }
 }

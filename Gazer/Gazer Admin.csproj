@@ -87,17 +87,17 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormDir.cs">
+    <Compile Include="FormPropertiesSystem.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormDir.Designer.cs">
-      <DependentUpon>FormDir.cs</DependentUpon>
+    <Compile Include="FormPropertiesSystem.Designer.cs">
+      <DependentUpon>FormPropertiesSystem.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormProperties.cs">
+    <Compile Include="FormPropertiesConnection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormProperties.Designer.cs">
-      <DependentUpon>FormProperties.cs</DependentUpon>
+    <Compile Include="FormPropertiesConnection.Designer.cs">
+      <DependentUpon>FormPropertiesConnection.cs</DependentUpon>
     </Compile>
     <Compile Include="FormUsers.cs">
       <SubType>Form</SubType>
@@ -129,11 +129,11 @@
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormDir.resx">
-      <DependentUpon>FormDir.cs</DependentUpon>
+    <EmbeddedResource Include="FormPropertiesSystem.resx">
+      <DependentUpon>FormPropertiesSystem.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormProperties.resx">
-      <DependentUpon>FormProperties.cs</DependentUpon>
+    <EmbeddedResource Include="FormPropertiesConnection.resx">
+      <DependentUpon>FormPropertiesConnection.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormUsers.resx">
       <DependentUpon>FormUsers.cs</DependentUpon>

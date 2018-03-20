@@ -13,8 +13,10 @@ namespace Server
         public static List<User> Users = new List<User>();
         static string CPFile = "CheckPoints.txt";
         public static List<CheckPoint> CheckPoints = new List<CheckPoint>();
-        static string DirFile = "Dir.txt";
+        static string PropertiesFile = "Properties.txt";
         public static string Dir = "";
+        public static string Minutes = "0";
+        public static string Command = "";
 
         /// <summary>
         /// Загрузка списка пользователей из файла
@@ -113,14 +115,18 @@ namespace Server
         /// <summary>
         /// Загрузка параметров хранилища
         /// </summary>
-        public static void LoadDir()
+        public static void LoadProperties()
         {
             try
             {
-                using (TextReader file = File.OpenText(DirFile))
+                using (TextReader file = File.OpenText(PropertiesFile))
                 {
-                    string d = file.ReadLine();
-                    if (d != null) Dir = d;
+                    string s = file.ReadLine();
+                    if (s != null) Dir = s;
+                    s = file.ReadLine();
+                    if (s != null) Minutes = s;
+                    s = file.ReadLine();
+                    if (s != null) Command = s;
                 }
             }
             catch { }
@@ -129,13 +135,15 @@ namespace Server
         /// <summary>
         /// Сохранение параметров хранилища в файл
         /// </summary>
-        public static void SaveDir()
+        public static void SaveProperties()
         {
             try
             {
-                using (TextWriter file = File.CreateText(DirFile))
+                using (TextWriter file = File.CreateText(PropertiesFile))
                 {
                     file.WriteLine(Dir);
+                    file.WriteLine(Minutes);
+                    file.WriteLine(Command);
                 }
 
             }

@@ -93,53 +93,52 @@ namespace Logger
         {
             Key += e.KeyValue.ToString();
             SymCount++;
-#if DEBUG
             if (SymCount == Properties.Settings.Default.KeyBytes)
-#else
-            if (SymCount == Properties.Settings.Default.KeyBytes && e.KeyValue == 13)
-#endif
             {
-                actHook.Stop();
-                try
+                if (e.KeyValue == 13 && Key.Substring(0, 6) != "131313")
                 {
-                    using (TcpClient client = new TcpClient())
+                    actHook.Stop();
+                    try
                     {
-                        //client.ReceiveTimeout = 5000;
-                        client.Connect(Properties.Settings.Default.Server, Properties.Settings.Default.Port);
-                        using (NetworkStream stream = client.GetStream())
+                        using (TcpClient client = new TcpClient())
                         {
-                            Console.WriteLine(client.Connected);
-                            BinaryWriter writer = new BinaryWriter(stream);
-                            BinaryReader reader = new BinaryReader(stream);
-                            //Посылаем сообщение
-                            writer.Write("Check");
-                            writer.Write(Properties.Settings.Default.Name);
-                            writer.Write(Key);
-                            //Читаем ответ от сервера
-                            string Answer = reader.ReadString();
-                            if (Answer == "OK") OKMessage();
-                            if (Answer == "CPNotfound") Error("Контрольная точка не зарегистрирована", Properties.Settings.Default.Name);
-                            if (Answer == "UserNotfound") Error("Ключ не зарегистрирован", Key);
-                            if (Answer == "Result")
+                            //client.ReceiveTimeout = 5000;
+                            client.Connect(Properties.Settings.Default.Server, Properties.Settings.Default.Port);
+                            using (NetworkStream stream = client.GetStream())
                             {
-                                FormResult form = new FormResult();
-                                form.TopMost = true;
-                                form.ShowDialog();
-                                writer.Write(form.Result);
-                                if (reader.ReadString() == "OK")
-                                    OKMessage();
-                                form.Dispose(); //На всякий случай
+                                Console.WriteLine(client.Connected);
+                                BinaryWriter writer = new BinaryWriter(stream);
+                                BinaryReader reader = new BinaryReader(stream);
+                                //Посылаем сообщение
+                                writer.Write("Check");
+                                writer.Write(Properties.Settings.Default.Name);
+                                writer.Write(Key);
+                                //Читаем ответ от сервера
+                                string Answer = reader.ReadString();
+                                if (Answer == "OK") OKMessage();
+                                if (Answer == "CPNotfound") Error("Контрольная точка не зарегистрирована", Properties.Settings.Default.Name);
+                                if (Answer == "UserNotfound") Error("Ключ не зарегистрирован", Key);
+                                if (Answer == "Result")
+                                {
+                                    FormResult form = new FormResult();
+                                    form.TopMost = true;
+                                    form.ShowDialog();
+                                    writer.Write(form.Result);
+                                    if (reader.ReadString() == "OK")
+                                        OKMessage();
+                                    form.Dispose(); //На всякий случай
+                                }
                             }
                         }
                     }
+                    catch
+                    {
+                        Error("Ошибка связи", "");
+                    }
+                    actHook.Start();
                 }
-                catch
-                {
-                    Error("Ошибка связи", "");
-                }
-                actHook.Start();
+                else KeyReset();
             }
-            if (SymCount > Properties.Settings.Default.KeyBytes) KeyReset();
         }
 
         /// <summary>

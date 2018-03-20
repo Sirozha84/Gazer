@@ -40,7 +40,7 @@
             // timerPing
             // 
             this.timerPing.Enabled = true;
-            this.timerPing.Interval = 3000;
+            this.timerPing.Interval = 5000;
             this.timerPing.Tick += new System.EventHandler(this.timerPing_Tick);
             // 
             // labelStatus
@@ -49,7 +49,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelStatus.ForeColor = System.Drawing.Color.White;
-            this.labelStatus.Location = new System.Drawing.Point(12, 324);
+            this.labelStatus.Location = new System.Drawing.Point(12, 330);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(388, 24);
             this.labelStatus.TabIndex = 1;
@@ -60,7 +60,7 @@
             // timerKeyReset
             // 
             this.timerKeyReset.Enabled = true;
-            this.timerKeyReset.Interval = 500;
+            this.timerKeyReset.Interval = 200;
             this.timerKeyReset.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // labelVersion
@@ -69,11 +69,11 @@
             this.labelVersion.AutoSize = true;
             this.labelVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelVersion.ForeColor = System.Drawing.Color.Gray;
-            this.labelVersion.Location = new System.Drawing.Point(472, 326);
+            this.labelVersion.Location = new System.Drawing.Point(472, 332);
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(100, 20);
             this.labelVersion.TabIndex = 2;
-            this.labelVersion.Text = "Версия 1.2";
+            this.labelVersion.Text = "Версия 1.3";
             // 
             // textBoxLog
             // 
@@ -88,7 +88,7 @@
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ReadOnly = true;
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxLog.Size = new System.Drawing.Size(560, 309);
+            this.textBoxLog.Size = new System.Drawing.Size(560, 317);
             this.textBoxLog.TabIndex = 3;
             this.textBoxLog.TabStop = false;
             // 
