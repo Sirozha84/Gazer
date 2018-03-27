@@ -73,7 +73,7 @@
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(100, 20);
             this.labelVersion.TabIndex = 2;
-            this.labelVersion.Text = "Версия 1.3";
+            this.labelVersion.Text = "Версия 2.0";
             // 
             // textBoxLog
             // 

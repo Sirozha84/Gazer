@@ -10,22 +10,23 @@ namespace Server
 {
     class Program
     {
-        static int Minutes;
+        static int minutes;
         static Timer timer;
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Gazer Server     Версия 1.3.2 (26.03.2018)\n");
+            Console.WriteLine("Gazer Server     Версия 2.0.0 (27.03.2018)\n");
             
-            //Загрузка списка данных из файлов
+            //Загрузка данных из файлов
             Data.LoadUsers();
             Data.LoadCP();
             Data.LoadProperties();
-            timer = new Timer(TimeOut, null, 0, 60000);
+            Data.LoadTemp();
+            timer = new Timer(tick, null, 0, 60000);
             //Запуск сервера
             TcpListener server = new TcpListener(IPAddress.Any, 8081);
             server.Start();
-            Log("Сервер запущен...");
+            Log.Write("Сервер запущен...");
             while (true)
             {
                 ThreadPool.QueueUserWorkItem(call, server.AcceptTcpClient());
@@ -95,26 +96,26 @@ namespace Server
                 }
                 if (Request == "ReadProperties")
                 {
-                    writer.Write(Data.Dir);
-                    writer.Write(Data.report);
-                    writer.Write(Data.sendReportFile);
-                    writer.Write(Data.sendReportCommand);
-                    writer.Write(Data.timeOutTest);
-                    writer.Write(Data.minutes);
-                    writer.Write(Data.commandTimeOut);
+                    writer.Write(Data.photosDir);
+                    writer.Write(Data.reportEnable);
+                    writer.Write(Data.reportFile);
+                    writer.Write(Data.reportCommand);
+                    writer.Write(Data.timeOutTestEnable);
+                    writer.Write(Data.timeOutMinutes);
+                    writer.Write(Data.timeOutCommand);
                 }
                 if (Request == "WriteProperties")
                 {
-                    int oldMinutes = Data.minutes;
-                    Data.Dir = reader.ReadString();
-                    Data.report = reader.ReadBoolean();
-                    Data.sendReportFile = reader.ReadString();
-                    Data.sendReportCommand = reader.ReadString();
-                    Data.timeOutTest = reader.ReadBoolean();
-                    Data.minutes = reader.ReadInt32();
-                    Data.commandTimeOut = reader.ReadString();
+                    int oldMinutes = Data.timeOutMinutes;
+                    Data.photosDir = reader.ReadString();
+                    Data.reportEnable = reader.ReadBoolean();
+                    Data.reportFile = reader.ReadString();
+                    Data.reportCommand = reader.ReadString();
+                    Data.timeOutTestEnable = reader.ReadBoolean();
+                    Data.timeOutMinutes = reader.ReadInt32();
+                    Data.timeOutCommand = reader.ReadString();
                     Data.SaveProperties();
-                    if (oldMinutes != Data.minutes) Minutes = 0;
+                    if (oldMinutes != Data.timeOutMinutes) minutes = 0;
                 }
                 //Отметка сотрудника
                 if (Request == "Check")
@@ -127,12 +128,12 @@ namespace Server
                     if (cp == null)
                     {
                         writer.Write("CPNotfound");
-                        Log("Контрольная точка не зарегистрирована (" + c + ")" + TimePassed());
+                        Log.Write("Контрольная точка не зарегистрирована (" + c + ")" + TimePassed());
                     }
                     else if (user == null)
                     {
                         writer.Write("UserNotfound");
-                        Log("Ключ не зарегистрирован (" + u + ")" + TimePassed());
+                        Log.Write("Ключ не зарегистрирован (" + u + ")" + TimePassed());
                     }
                     else
                     {
@@ -212,7 +213,7 @@ namespace Server
                     while ((read = stream.Read(buffer, total, 1000)) != 0) { total += read; }
                     Bitmap bmp = (Bitmap)Bitmap.FromStream(new MemoryStream(buffer, 0, total));
                     //Сохранение в файл
-                    string dir = Data.Dir + "\\" + time.ToString("yyyy.MM.dd");
+                    string dir = Data.photosDir + "\\" + time.ToString("yyyy.MM.dd");
                     Directory.CreateDirectory(dir);
                     photo = dir + "\\" + time.ToString("HHmmss") + ".jpg";
                     bmp.Save(photo);
@@ -233,47 +234,52 @@ namespace Server
                 file.WriteLine(res);
                 file.WriteLine(photo);
             }
-            Log(cp.Name + " " + u.Name + " " + res + TimePassed());
+            Log.Write("[" + cp.Name + "] " + u.Name + ", " + res + ", " + TimePassed());
         }
 
         static string TimePassed()
         {
-            string t = " прошло " + Minutes.ToString() + " минут";
-            Minutes = 0;
+            string t = " прошло " + minutes.ToString() + " минут";
+            minutes = 0;
             return t;
         }
 
         /// <summary>
-        /// Запись лога программы
+        /// Таймер
         /// </summary>
-        /// <param name="rec">Запись</param>
-        static void Log(string rec)
+        /// <param name="o"></param>
+        static void tick(object o)
         {
-            rec = DateTime.Now.ToString("[yyyy.MM.dd HH:mm] ") + rec;
-            Console.WriteLine(rec);
-            using (StreamWriter file = File.AppendText("Log.txt"))
-                file.WriteLine(rec);
-        }
-
-        static void TimeOut(object o)
-        {
-            //Console.Write(".");
-            Minutes++;
-            int timeOut = Convert.ToInt32(Data.minutes);// * 60;
-            if (timeOut > 0)
+            minutes++;
+            //Ежедневный отчёт
+            if (Data.reportEnable)
             {
-                if (Minutes >= timeOut)
+                if (minutes > Data.maxTime) Data.maxTime = minutes;
+                string now = DateTime.Now.ToString("yyyy.MM.dd");
+                if (Data.curDate != now)
                 {
+                    Data.SaveReport();
+                    Data.curDate = now;
+                    Data.maxTime = 0;
+                }
+                Data.SaveTemp();
+            }
+            //Проверка на простой
+            if (Data.timeOutTestEnable)
+            {
+                if (minutes >= Data.timeOutMinutes)
+                {
+                    string s = "Зафиксировано бездействие дольше разрешённого, ";
                     try
                     {
-                        Process.Start(Data.commandTimeOut);
-                        Log("Зафиксировано бездействие дольше разрешённого, выполнена внешняя команда");
+                        Process.Start(Data.timeOutCommand);
+                        Log.Write(s + "выполнена внешняя команда");
                     }
                     catch
                     {
-                        Log("Зафиксировано бездействие дольше разрешённого, но произошла ошибка при выполнении внешней команды");
+                        Log.Write(s + "но произошла ошибка при выполнении внешней команды");
                     }
-                    Minutes = 0;
+                    minutes = 0;
                 }
             }
         }

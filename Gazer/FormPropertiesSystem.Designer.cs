@@ -155,6 +155,7 @@
             this.buttonBrowseSendReport.TabIndex = 16;
             this.buttonBrowseSendReport.Text = "Обзор";
             this.buttonBrowseSendReport.UseVisualStyleBackColor = true;
+            this.buttonBrowseSendReport.Click += new System.EventHandler(this.buttonBrowseSendReport_Click);
             // 
             // textBoxSendReport
             // 
@@ -190,6 +191,7 @@
             this.buttonBrowseReport.TabIndex = 12;
             this.buttonBrowseReport.Text = "Обзор";
             this.buttonBrowseReport.UseVisualStyleBackColor = true;
+            this.buttonBrowseReport.Click += new System.EventHandler(this.buttonBrowseReport_Click);
             // 
             // textBoxReport
             // 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Diagnostics;
 
 namespace Server
 {
@@ -11,14 +12,18 @@ namespace Server
         static string CPFile = "CheckPoints.txt";
         public static List<CheckPoint> CheckPoints = new List<CheckPoint>();
         static string PropertiesFile = "Properties.txt";
-
-        public static string Dir = "";
-        public static bool report = false;
-        public static string sendReportFile = "";
-        public static string sendReportCommand = "";
-        public static bool timeOutTest = false;
-        public static int minutes = 30;
-        public static string commandTimeOut = "";
+        static string TempFile = "Temp.txt";
+        //Параметры
+        public static string photosDir = "";
+        public static bool reportEnable = false;
+        public static string reportFile = "";
+        public static string reportCommand = "";
+        public static bool timeOutTestEnable = false;
+        public static int timeOutMinutes = 30;
+        public static string timeOutCommand = "";
+        //Данные для отчёта
+        public static string curDate = "";
+        public static int maxTime = 0;
 
         /// <summary>
         /// Загрузка списка пользователей из файла
@@ -125,21 +130,21 @@ namespace Server
                 {
                     //Папка
                     string s = file.ReadLine();
-                    if (s != null) Dir = s;
+                    if (s != null) photosDir = s;
                     //Отчёт каждый день
                     s = file.ReadLine();
-                    if (s != null) report = Convert.ToBoolean(s);
+                    if (s != null) reportEnable = Convert.ToBoolean(s);
                     s = file.ReadLine();
-                    if (s != null) sendReportFile = s;
+                    if (s != null) reportFile = s;
                     s = file.ReadLine();
-                    if (s != null) sendReportCommand = s;
+                    if (s != null) reportCommand = s;
                     //Проверка на простой
                     s = file.ReadLine();
-                    if (s != null) timeOutTest = Convert.ToBoolean(s);
+                    if (s != null) timeOutTestEnable = Convert.ToBoolean(s);
                     s = file.ReadLine();
-                    if (s != null) minutes = Convert.ToInt32(s);
+                    if (s != null) timeOutMinutes = Convert.ToInt32(s);
                     s = file.ReadLine();
-                    if (s != null) commandTimeOut = s;
+                    if (s != null) timeOutCommand = s;
                 }
             }
             catch { }
@@ -154,17 +159,81 @@ namespace Server
             {
                 using (TextWriter file = File.CreateText(PropertiesFile))
                 {
-                    file.WriteLine(Dir);
-                    file.WriteLine(report);
-                    file.WriteLine(sendReportFile);
-                    file.WriteLine(sendReportCommand);
-                    file.WriteLine(timeOutTest);
-                    file.WriteLine(minutes);
-                    file.WriteLine(commandTimeOut);
+                    file.WriteLine(photosDir);
+                    file.WriteLine(reportEnable);
+                    file.WriteLine(reportFile);
+                    file.WriteLine(reportCommand);
+                    file.WriteLine(timeOutTestEnable);
+                    file.WriteLine(timeOutMinutes);
+                    file.WriteLine(timeOutCommand);
                 }
-
             }
             catch { }
+        }
+
+        /// <summary>
+        /// Загрузка данных из временного файла
+        /// </summary>
+        public static void LoadTemp()
+        {
+            try
+            {
+                using (TextReader file = File.OpenText(TempFile))
+                {
+                    string s = file.ReadLine();
+                    if (s != null) curDate = s;
+                    s = file.ReadLine();
+                    if (s != null) maxTime = Convert.ToInt32(s);
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Сохранение данных во временный файл
+        /// </summary>
+        public static void SaveTemp()
+        {
+            try
+            {
+                using (TextWriter file = File.CreateText(TempFile))
+                {
+                    file.WriteLine(curDate);
+                    file.WriteLine(maxTime);
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Запись суточного отчёта
+        /// </summary>
+        public static void SaveReport()
+        {
+            try
+            {
+                using (TextWriter file = File.CreateText(reportFile))
+                {
+                    file.WriteLine("Отчёт системы Gazer за " + curDate);
+                    file.WriteLine("");
+                    file.WriteLine("Максимальное врема простоя " + maxTime + " минут");
+                    string s = "Отчёт за " + curDate + " записан, ";
+                    try
+                    {
+                        Process.Start(reportCommand);
+                        s += "внешняя команда выполнена";
+                    }
+                    catch
+                    {
+                        s += "но возникла проблемы при выполнении внешней команды";
+                    }
+                    Log.Write(s);
+                }
+            }
+            catch
+            {
+                Log.Write("Возникла проблема при записи отчёта");
+            }
         }
     }
 }

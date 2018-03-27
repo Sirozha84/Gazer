@@ -116,12 +116,16 @@ namespace Gazer
             return "При проверке произошла ошибка";
         }
 
-        private void buttonCommand_Click(object sender, EventArgs e)
+        void BrowseFile(TextBox tb)
         {
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
-                textBoxCommand.Text = dialog.FileName;
+                tb.Text = dialog.FileName;
         }
+
+        private void buttonCommand_Click(object sender, EventArgs e) { BrowseFile(textBoxCommand); }
+        private void buttonBrowseReport_Click(object sender, EventArgs e) { BrowseFile(textBoxReport); }
+        private void buttonBrowseSendReport_Click(object sender, EventArgs e) { BrowseFile(textBoxSendReport); }
 
         private void checkBoxTimeOut_CheckedChanged(object sender, EventArgs e)
         {
@@ -137,5 +141,6 @@ namespace Gazer
         {
             labelStatus1.Text = CommandTest(textBoxSendReport.Text);
         }
+
     }
 }
