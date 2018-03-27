@@ -11,17 +11,17 @@ namespace Server
     class Program
     {
         static int Minutes;
+        static Timer timer;
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Gazer Server     Версия 1.3 (20.03.2018)\n");
+            Console.WriteLine("Gazer Server     Версия 1.3.2 (26.03.2018)\n");
             
             //Загрузка списка данных из файлов
             Data.LoadUsers();
             Data.LoadCP();
             Data.LoadProperties();
-            Timer timerTest = new Timer(TimeOut, null, 0, 60000); //Релиз - минута как минута
-            //Timer timerTest = new Timer(TimeOut, null, 0, 1000); //Тестово - минута как секунда
+            timer = new Timer(TimeOut, null, 0, 60000);
             //Запуск сервера
             TcpListener server = new TcpListener(IPAddress.Any, 8081);
             server.Start();
@@ -96,16 +96,25 @@ namespace Server
                 if (Request == "ReadProperties")
                 {
                     writer.Write(Data.Dir);
-                    writer.Write(Data.Minutes);
-                    writer.Write(Data.Command);
+                    writer.Write(Data.report);
+                    writer.Write(Data.sendReportFile);
+                    writer.Write(Data.sendReportCommand);
+                    writer.Write(Data.timeOutTest);
+                    writer.Write(Data.minutes);
+                    writer.Write(Data.commandTimeOut);
                 }
                 if (Request == "WriteProperties")
                 {
+                    int oldMinutes = Data.minutes;
                     Data.Dir = reader.ReadString();
-                    Data.Minutes = reader.ReadString();
-                    Data.Command = reader.ReadString();
+                    Data.report = reader.ReadBoolean();
+                    Data.sendReportFile = reader.ReadString();
+                    Data.sendReportCommand = reader.ReadString();
+                    Data.timeOutTest = reader.ReadBoolean();
+                    Data.minutes = reader.ReadInt32();
+                    Data.commandTimeOut = reader.ReadString();
                     Data.SaveProperties();
-                    Minutes = 0;
+                    if (oldMinutes != Data.minutes) Minutes = 0;
                 }
                 //Отметка сотрудника
                 if (Request == "Check")
@@ -118,12 +127,12 @@ namespace Server
                     if (cp == null)
                     {
                         writer.Write("CPNotfound");
-                        Log("Контрольная точка не зарегистрирована (" + c + ")");
+                        Log("Контрольная точка не зарегистрирована (" + c + ")" + TimePassed());
                     }
                     else if (user == null)
                     {
                         writer.Write("UserNotfound");
-                        Log("Ключ не зарегистрирован (" + u + ")");
+                        Log("Ключ не зарегистрирован (" + u + ")" + TimePassed());
                     }
                     else
                     {
@@ -141,7 +150,6 @@ namespace Server
                             Check(cp, user, "OK");
                         }
                     }
-                    Minutes = 0;
                 }
                 //Запрос журнала
                 if (Request == "ReadLog")
@@ -225,7 +233,14 @@ namespace Server
                 file.WriteLine(res);
                 file.WriteLine(photo);
             }
-            Log(cp.Name + " " + u.Name + " " + res);
+            Log(cp.Name + " " + u.Name + " " + res + TimePassed());
+        }
+
+        static string TimePassed()
+        {
+            string t = " прошло " + Minutes.ToString() + " минут";
+            Minutes = 0;
+            return t;
         }
 
         /// <summary>
@@ -242,20 +257,24 @@ namespace Server
 
         static void TimeOut(object o)
         {
+            //Console.Write(".");
             Minutes++;
-            //Log("таймер " + Minutes.ToString());
-            if (Minutes >= Convert.ToInt32(Data.Minutes) && Convert.ToInt32(Data.Minutes) > 0)
+            int timeOut = Convert.ToInt32(Data.minutes);// * 60;
+            if (timeOut > 0)
             {
-                try
+                if (Minutes >= timeOut)
                 {
-                    Process.Start(Data.Command);
-                    Log("Зафиксировано бездействие дольше разрешённого, выполнена внешняя команда");
+                    try
+                    {
+                        Process.Start(Data.commandTimeOut);
+                        Log("Зафиксировано бездействие дольше разрешённого, выполнена внешняя команда");
+                    }
+                    catch
+                    {
+                        Log("Зафиксировано бездействие дольше разрешённого, но произошла ошибка при выполнении внешней команды");
+                    }
+                    Minutes = 0;
                 }
-                catch
-                {
-                    Log("Зафиксировано бездействие дольше разрешённого, но произошла ошибка при выполнении внешней команды");
-                }
-                Minutes = 0;
             }
         }
     }

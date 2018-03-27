@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace Server
@@ -14,9 +11,14 @@ namespace Server
         static string CPFile = "CheckPoints.txt";
         public static List<CheckPoint> CheckPoints = new List<CheckPoint>();
         static string PropertiesFile = "Properties.txt";
+
         public static string Dir = "";
-        public static string Minutes = "0";
-        public static string Command = "";
+        public static bool report = false;
+        public static string sendReportFile = "";
+        public static string sendReportCommand = "";
+        public static bool timeOutTest = false;
+        public static int minutes = 30;
+        public static string commandTimeOut = "";
 
         /// <summary>
         /// Загрузка списка пользователей из файла
@@ -121,12 +123,23 @@ namespace Server
             {
                 using (TextReader file = File.OpenText(PropertiesFile))
                 {
+                    //Папка
                     string s = file.ReadLine();
                     if (s != null) Dir = s;
+                    //Отчёт каждый день
                     s = file.ReadLine();
-                    if (s != null) Minutes = s;
+                    if (s != null) report = Convert.ToBoolean(s);
                     s = file.ReadLine();
-                    if (s != null) Command = s;
+                    if (s != null) sendReportFile = s;
+                    s = file.ReadLine();
+                    if (s != null) sendReportCommand = s;
+                    //Проверка на простой
+                    s = file.ReadLine();
+                    if (s != null) timeOutTest = Convert.ToBoolean(s);
+                    s = file.ReadLine();
+                    if (s != null) minutes = Convert.ToInt32(s);
+                    s = file.ReadLine();
+                    if (s != null) commandTimeOut = s;
                 }
             }
             catch { }
@@ -142,8 +155,12 @@ namespace Server
                 using (TextWriter file = File.CreateText(PropertiesFile))
                 {
                     file.WriteLine(Dir);
-                    file.WriteLine(Minutes);
-                    file.WriteLine(Command);
+                    file.WriteLine(report);
+                    file.WriteLine(sendReportFile);
+                    file.WriteLine(sendReportCommand);
+                    file.WriteLine(timeOutTest);
+                    file.WriteLine(minutes);
+                    file.WriteLine(commandTimeOut);
                 }
 
             }

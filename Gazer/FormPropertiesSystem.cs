@@ -25,14 +25,22 @@ namespace Gazer
                         BinaryWriter writer = new BinaryWriter(stream);
                         BinaryReader reader = new BinaryReader(stream);
                         writer.Write("ReadProperties");
+                        //Папка для фоток
                         textBoxDir.Text = reader.ReadString();
-                        numericUpDownMinutes.Value = Convert.ToDecimal(reader.ReadString());
+                        //Ежедневный отчёт
+                        checkBoxEveryDay.Checked = reader.ReadBoolean();
+                        textBoxReport.Text = reader.ReadString();
+                        textBoxSendReport.Text = reader.ReadString();
+                        //Проверка простоя
+                        checkBoxTimeOut.Checked = reader.ReadBoolean();
+                        numericUpDownMinutes.Value = reader.ReadInt32();
                         textBoxCommand.Text = reader.ReadString();
                     }
                 }
             }
             catch { }
-            numericUpDownMinutes_ValueChanged(null, null);
+            checkBoxEveryDay_CheckedChanged(null, null);
+            checkBoxTimeOut_CheckedChanged(null, null);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -53,8 +61,15 @@ namespace Gazer
                         BinaryWriter writer = new BinaryWriter(stream);
                         BinaryReader reader = new BinaryReader(stream);
                         writer.Write("WriteProperties");
+                        //Папка для фоток
                         writer.Write(textBoxDir.Text);
-                        writer.Write(numericUpDownMinutes.Value.ToString());
+                        //Ежедневный отчёт
+                        writer.Write(checkBoxEveryDay.Checked);
+                        writer.Write(textBoxReport.Text);
+                        writer.Write(textBoxSendReport.Text);
+                        //Проверка простоя
+                        writer.Write(checkBoxTimeOut.Checked);
+                        writer.Write(Convert.ToInt32(numericUpDownMinutes.Value));
                         writer.Write(textBoxCommand.Text);
                     }
                 }
@@ -71,16 +86,14 @@ namespace Gazer
                 textBoxDir.Text = dir.SelectedPath;
         }
 
-        private void numericUpDownMinutes_ValueChanged(object sender, EventArgs e)
-        {
-            textBoxCommand.Enabled = numericUpDownMinutes.Value > 0;
-            buttonCommand.Enabled = numericUpDownMinutes.Value > 0;
-            buttonTest.Enabled = numericUpDownMinutes.Value > 0;
-        }
-
         private void buttonTest_Click(object sender, EventArgs e)
         {
-            //Проверка доступности внешней программы
+            labelStatus2.Text = CommandTest(textBoxCommand.Text);
+        }
+
+        //Проверка доступности внешней программы
+        string CommandTest(string command)
+        {
             try
             {
                 using (TcpClient client = new TcpClient())
@@ -91,15 +104,16 @@ namespace Gazer
                         BinaryWriter writer = new BinaryWriter(stream);
                         BinaryReader reader = new BinaryReader(stream);
                         writer.Write("TestCommand");
-                        writer.Write(textBoxCommand.Text);
+                        writer.Write(command);
                         if (reader.ReadString() == "OK")
-                            labelStatus.Text = "Проверка прошла успешно.";
+                            return "Проверка прошла успешно";
                         else
-                            labelStatus.Text = "При проверке произошла ошибка.";
+                            return "Файл не найден";
                     }
                 }
             }
             catch { }
+            return "При проверке произошла ошибка";
         }
 
         private void buttonCommand_Click(object sender, EventArgs e)
@@ -107,6 +121,21 @@ namespace Gazer
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
                 textBoxCommand.Text = dialog.FileName;
+        }
+
+        private void checkBoxTimeOut_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBoxTimeOutTest.Enabled = checkBoxTimeOut.Checked;
+        }
+
+        private void checkBoxEveryDay_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBoxReport.Enabled = checkBoxEveryDay.Checked;
+        }
+
+        private void buttonTestSendReport_Click(object sender, EventArgs e)
+        {
+            labelStatus1.Text = CommandTest(textBoxSendReport.Text);
         }
     }
 }
