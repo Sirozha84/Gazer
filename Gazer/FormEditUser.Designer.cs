@@ -38,6 +38,8 @@
             this.buttonKey = new System.Windows.Forms.Button();
             this.buttonDel = new System.Windows.Forms.Button();
             this.labelKeyStatus = new System.Windows.Forms.Label();
+            this.textBoxKey = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelName
@@ -61,7 +63,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(330, 122);
+            this.buttonCancel.Location = new System.Drawing.Point(330, 156);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -73,7 +75,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Enabled = false;
-            this.buttonOK.Location = new System.Drawing.Point(249, 122);
+            this.buttonOK.Location = new System.Drawing.Point(249, 156);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
@@ -138,13 +140,32 @@
             this.labelKeyStatus.Size = new System.Drawing.Size(0, 13);
             this.labelKeyStatus.TabIndex = 11;
             // 
+            // textBoxKey
+            // 
+            this.textBoxKey.Location = new System.Drawing.Point(152, 109);
+            this.textBoxKey.Name = "textBoxKey";
+            this.textBoxKey.Size = new System.Drawing.Size(217, 20);
+            this.textBoxKey.TabIndex = 13;
+            this.textBoxKey.TextChanged += new System.EventHandler(this.textBoxKey_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(83, 112);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(63, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Код ключа:";
+            // 
             // FormEditUser
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(417, 157);
+            this.ClientSize = new System.Drawing.Size(417, 191);
+            this.Controls.Add(this.textBoxKey);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.labelKeyStatus);
             this.Controls.Add(this.buttonDel);
             this.Controls.Add(this.buttonKey);
@@ -179,5 +200,7 @@
         private System.Windows.Forms.Button buttonKey;
         private System.Windows.Forms.Button buttonDel;
         private System.Windows.Forms.Label labelKeyStatus;
+        private System.Windows.Forms.TextBox textBoxKey;
+        private System.Windows.Forms.Label label1;
     }
 }

@@ -24,6 +24,7 @@ namespace Gazer
             comboBoxTypes.DataSource = Data.Types;
             comboBoxTypes.SelectedIndex = type;
             Key = key;
+            textBoxKey.Text = Key;
             KeyButtonRefresh();
         }
 
@@ -39,6 +40,7 @@ namespace Gazer
             if (form.ShowDialog() == DialogResult.OK)
             {
                 Key = form.Key;
+                textBoxKey.Text = Key;
                 KeyButtonRefresh();
             }
         }
@@ -65,6 +67,13 @@ namespace Gazer
         private void button1_Click(object sender, EventArgs e)
         {
             Key = "";
+            textBoxKey.Text = Key;
+            KeyButtonRefresh();
+        }
+
+        private void textBoxKey_TextChanged(object sender, EventArgs e)
+        {
+            Key = textBoxKey.Text;
             KeyButtonRefresh();
         }
     }
